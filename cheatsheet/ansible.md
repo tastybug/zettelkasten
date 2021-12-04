@@ -53,7 +53,7 @@ This prints hostvars, groupvars and so on:
 
 And there is also this (untested): https://github.com/f500/ansible-dumpall
 
-Waiting for certain conditions to be true before continuing
+### Waiting for certain conditions to be true before continuing
 
 To wait for a particular condition to be true before executing an action, there are a number of modules that help:
 
