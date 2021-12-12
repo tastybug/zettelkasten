@@ -1,13 +1,12 @@
 # Good API Design: Resources, Articles
 
+## Eagerly discerning, discerningly eager
 
-“Eagerly discerning, discerningly eager“: Approaches to crafting delightful, effective APIs that offer developers both convenience and stability.
-
-https://increment.com/apis/api-design-for-eager-discering-developers/
+Approaches to crafting delightful, effective APIs that offer developers both convenience and stability. https://increment.com/apis/api-design-for-eager-discering-developers/
 
 ----
 
-“The Process: Revitalizing API development at PagerDuty”: Focusing on simplicity and empowerment proved key.
+## “The Process: Revitalizing API development at PagerDuty”: Focusing on simplicity and empowerment proved key.
 
 https://increment.com/apis/the-process-revitalizing-api-development-pagerduty/
 
