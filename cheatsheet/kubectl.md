@@ -42,7 +42,7 @@ Check out the link, it has really good example one liners: <https://kubernetes.i
   * `kubectl get secret writer --namespace nonprod-seller-kfk -o jsonpath="{.data.password}" | base64 --decode`
   * `kubectl get secret reader --namespace nonprod-seller-kfk -o jsonpath="{.data.password}" | base64 --decode`
 * switch "context", which is cluster + namespace + user:
-  * `kubectl config get-contexts; kubectl config set-context XYZ`
+  * `kubectl config get-contexts; kubectl config use-context XYZ`
 * see current cluster, namespace (the active one is marked)
   * `kubectl config get-contexts`
 * copy a file to a pod
