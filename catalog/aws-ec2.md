@@ -4,7 +4,7 @@ VMs in the cloud. Images are called AMIs.
 
 ## Pricing:
 
-____On Demand_: least commitment, you are charged by time running. Good for experimentation or where the work load is spikey, unpredictable. You pay by the hour.
+_On Demand_: least commitment, you are charged by time running. Good for experimentation or where the work load is spikey, unpredictable. You pay by the hour.
 
 _Reserved Instances_: you commit to a 1 or 3 year contract. You can pay full or in part upfront to get savings.
 Best long term for predictable usage and steady state.
