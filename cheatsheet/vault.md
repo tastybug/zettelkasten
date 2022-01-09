@@ -11,3 +11,7 @@
 * Check under which path the KV store is: `vault secrets list`
 * Add value: `vault kv put secret/database 'password=2hard4u'`
 * Get value: `vault kv get secret/databse`
+
+## Admin
+
+* list all peers when using raft as backend: `vault operator raft list-peers`

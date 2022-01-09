@@ -30,7 +30,7 @@ There are many backend implementations, some community owned. They either suppor
 Popular backends are cloud based like S3, Consul and the internal backend, called `raft`, where each node has it's own FS based persistency, which is synced automatically.
 
 * Consul: can be scaled independently, increasing throughput
-* Raft: is a file on the FS of each Vault node, no extra network hop necessary; sync is done transparently between the nodes
+* Raft: is a file on the FS of each Vault node (the node is stateful!), no extra network hop necessary; sync is done transparently between the nodes
 
 ## How Backends Influence Scaling
 
@@ -59,7 +59,8 @@ Running the server requires a configuration file: `vault server -config=<file>`,
 storage "raft" {
 	path = "/opt/vault2/data1"
 	node_id = "node1"
-    # this is cloud based auto-join configuration, other options exist
+    # this is cloud based auto-join configuration
+    # alternatively, one can manually join each node: `vault operator raf join http://thisnode.com:8200`
 	retry_join {
 	auto_join = "provider=aws region=us-east-1 tag_key=vault tag_value=us-east-1"
 	}
