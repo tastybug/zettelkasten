@@ -11,10 +11,8 @@ It comes with 3 flavors:
 
 ### Auth Methods
 
-Vault supports different means of authentication to then allow access to the secrets, engines and so on.
+Vault supports different means of authentication to then allow access to the secrets, engines and so on. Auth methods are used for different use cases (human vs app). The purpose of each auth method is to ultimately give you a TOKEN. With the token, you log in.
 Initially, the only method is the "token method", providing the `root token` that will be pre-generated for you when starting the server.
-
-Auth methods are used for different use cases (human vs app). The purpose of each auth method is to ultimately give you a TOKEN. With the token, you log in.
 
 Each auth method is enabled under a path, which _can_ be modified. `vault auth list` prints all enabled auth methods and their paths.
 
@@ -25,13 +23,14 @@ Vault comes with different "engines" that you make available under paths. E.g. y
 
 ### K/V Model
 
-The K/V engine is available under a path, say `secret/`. You are supposed to add nodes under the root, to which you attach a single k/v pair.
+The K/V engine is available under a path, say `secret/`. You are supposed to add nodes under the root, to which you attach k/v pair(s).
 
-Example: `vault kv put secret/nonprod/database 'password=bla'; vault kv put secret/nonprod/database 'username=dba'`
+Example: `vault kv put secret/nonprod/database 'password=bla' 'username=dba'`
 
 This results in:
 * secret/nonprod/database // <- the node
-	* password=bla // 2nd version k/v is active
+	* password=bla
+	* username=dba
 
 ## Backends
 
