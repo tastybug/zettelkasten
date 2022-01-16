@@ -12,11 +12,14 @@ It comes with 3 flavors:
 ### Auth Methods
 
 Vault supports different means of authentication to then allow access to the secrets, engines and so on. Auth methods are used for different use cases (human vs app). The purpose of each auth method is to ultimately give you a TOKEN. With the token, you log in.
-Initially, the only method is the "token method", providing the `root token` that will be pre-generated for you when starting the server.
+Initially, the only method is the "token method", which simply expects a token being given (e.g. the `root token` that will be pre-generated for you when starting the server in dev mode!).
 
-Each auth method is enabled under a path, which _can_ be modified. `vault auth list` prints all enabled auth methods and their paths.
+Each auth method is enabled under a path, which be modified. `vault auth list` prints all enabled auth methods and their paths.
 
-Auth methods can be modified (`vault auth tune PATH`), for example to alter the TTL.
+What auth methods are there:
+
+* `userpass`
+* `approle`
 
 ### Engines and Paths
 Vault comes with different "engines" that you make available under paths. E.g. you can run a K/V store under `secret/`.
