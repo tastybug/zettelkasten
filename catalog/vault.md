@@ -16,10 +16,51 @@ Initially, the only method is the "token method", which simply expects a token b
 
 Each auth method is enabled under a path, which be modified. `vault auth list` prints all enabled auth methods and their paths.
 
-What auth methods are there:
+Some available auth methods:
 
-* `userpass`
-* `approle`
+* `userpass`: user/password manually set up
+* `okta`, `github`: human-based, centralized OAuth providers
+* tls certificates, k8s, azure, kerberos, `approle` and others are means for S2S authentication
+
+### Entity (User or System) and Aliases
+
+An entity is something that authenticats with Vault, could be a system or a person. Each entity has 0+ aliases. An alias conceptually is also an entity and links a person/system to an auth method (e.g. entity "Jane" has alias `jsmith` with auth method `userpass` and `funky22` with auth method `github`). 
+
+Entities and Aliases come with a bunch of metadata and a policy. The policies of each can differ - the token generated when logging in will contain both policies.
+
+It's a bit counterintuitive that the method of authentication brings different permissions, but this is how it works according to [this](https://www.udemy.com/course/hashicorp-vault/learn/lecture/27039872#overview). Example:
+
+Entity `jane` has policy `management`.
+Alias for `github` has policy `HR`.
+Alias for `userpass` has policy `finance`.
+
+When logging in via github, Jane will receive a token with policies `management` and `HR`. When logging in via `userpass`, it's `management` plus `finance`.
+
+### Vault Groups
+
+You can group entities into Vault Groups. A group comes with a policy. When logging in an entity in a group, you receive a token with 3 policies attached to it: group, entity and alias.
+
+Some auth methods come with external groups, like scopes in JWT or groups in LDAP. You can map those external groups in Vault to internal groups or policy names.
+
+### Policies
+
+A user ("entity") in itself has access to nothing. Only by adding policies to a user or group, you open up the system.
+Policies are cumulative, meaning that you can be subject to multiple policies and you will have access to the superset of all permissions. Policies only add capabilities.
+
+Initially, there are 2 policies: `root` and `default`. The first one is added to all root tokens, the second to others. Both policies cannot be deleted and only `default` can be changed. `default` provides "common permissions".
+
+A policy covers paths and defines the allowed verbs on that path (create, update, ..). For examples, run `vault policy read default` to see how the `default` policy looks like. The policy is described in HCL, e.g.:
+```
+path "kv/database/nonprod" {
+	capabilities = ["read"]
+}
+
+path "sys/policies/*" {
+	capabilities = ["create", "list", "delete"]
+}
+```
+
+Some paths cover administrative functions, e.g. `sys/seal` to seal the vault instance. To allow access to those, the capability `sudo` is required.
 
 ### Engines and Paths
 Vault comes with different "engines" that you make available under paths. E.g. you can run a K/V store under `secret/`.
