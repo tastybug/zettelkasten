@@ -45,11 +45,11 @@ Some auth methods come with external groups, like scopes in JWT or groups in LDA
 ### Policies
 
 A user ("entity") in itself has access to nothing. Only by adding policies to a user or group, you open up the system.
-Policies are cumulative, meaning that you can be subject to multiple policies and you will have access to the superset of all permissions. Policies only add capabilities.
+Policies are cumulative, meaning that you can be subject to multiple policies and you will have access to the superset of all permissions.
 
 Initially, there are 2 policies: `root` and `default`. The first one is added to all root tokens, the second to others. Both policies cannot be deleted and only `default` can be changed. `default` provides "common permissions".
 
-A policy covers paths and defines the allowed verbs on that path (create, update, ..). For examples, run `vault policy read default` to see how the `default` policy looks like. The policy is described in HCL, e.g.:
+A policy covers paths and defines the allowed verbs on that path (read, create, update, delete, list, sudo and deny). For examples, run `vault policy read default` to see how the `default` policy looks like. The policy is described in HCL, e.g.:
 ```
 path "kv/database/nonprod" {
 	capabilities = ["read"]
@@ -62,10 +62,46 @@ path "sys/policies/*" {
 
 Some paths cover administrative functions, e.g. `sys/seal` to seal the vault instance. To allow access to those, the capability `sudo` is required.
 
+#### `*` Wildscards in Paths
+
+Policies can contain wildcards in paths (see example above). A wildcard is only allowed at the end of a path.
+A wildcard matches paths of any depth.
+
+Example: `secret/app/f*` matches
+* `secret/app/foo`
+* `secret/app/foo/bar/baz`
+* but not `secret/app`
+
+#### `+` Wildcards in Paths
+
+A `+` in a patch supports wildcard matching for a single directory in the path. 
+
+Example: `secret/+/+/db` matches:
+* `secret/app/nonprod/db`
+* `secret/app/prod/db`
+* but not `secret/prod/db
+* and not `secret/app/prod`
+
+#### Templating
+
+There is variable replacement in some policy strings with values available to the token.
+Here is an example for a generic policy statement that can apply to many users sharing a policy. It allows every user to list and create and read data under `secret/data/USERNAME/\*`:
+
+```
+path "secret/data/{{identity.entity.name}}/*" {
+	capabilities = ["list", "create", "read"]
+}
+```
+
+The list of variables isn't long, here's a few examples:
+* `identity.entity.id` entity id
+* `identity.entity.name` entity name
+* `identity.entity.metadata.$METADATAKEY` Metadata associated with the entity.
+
 ### Engines and Paths
 Vault comes with different "engines" that you make available under paths. E.g. you can run a K/V store under `secret/`.
 
-### K/V Model
+### K/V Engine
 
 The K/V engine is available under a path, say `secret/`. You are supposed to add nodes under the root, to which you attach k/v pair(s).
 
