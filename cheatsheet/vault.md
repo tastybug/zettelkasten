@@ -49,7 +49,7 @@
 3. `vault policy read root` fails funnily enough, even though it exists.
 4. `vault policy fmt FILENAME` formats a policy file
 5. `vault policy write funky-policy /tmp/funky.hcl`
-
+6. `vault token create -policy="funky-policy"` to create a token to test things out
 
 ## Working with K/V stores
 

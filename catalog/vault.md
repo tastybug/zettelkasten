@@ -1,7 +1,6 @@
 # Vault
 
-Is a Hashicorp tool that offers management of certificates and secrets.
-It comes with 3 flavors:
+Is a Hashicorp tool that offers management of certificates and secrets. It comes in 3 flavors:
 
 * open source: self hosted, free, dynamic secrets, ACL, key rolling, encryption as a service, aws/azure/gcp auto unseal, local clustering in a single DC (here I'm not sure why this cannot span different DCs)
 * enterprise: self hosted, non-free, all of open source plus disaster recovery, namespaces, replication (aka multi-cluster setups), read-only nodes, HSM auto-unseal, MFA, Sentinel, FIPS 140-2 & Seal Wrap (some gov standard)
@@ -9,12 +8,12 @@ It comes with 3 flavors:
 
 ## Thinking like Vault
 
-### Auth Methods
+### Auth Methods: Different Ways of Authenticating to Get a Token
 
-Vault supports different means of authentication to then allow access to the secrets, engines and so on. Auth methods are used for different use cases (human vs app). The purpose of each auth method is to ultimately give you a TOKEN. With the token, you log in.
+Vault supports different means of authentication to then allow access to the secrets, engines and so on. Auth methods are used for different use cases (human vs app). The purpose of each auth method is to ultimately give you a TOKEN. With the token you perform your actions.
 Initially, the only method is the "token method", which simply expects a token being given (e.g. the `root token` that will be pre-generated for you when starting the server in dev mode!).
 
-Each auth method is enabled under a path, which be modified. `vault auth list` prints all enabled auth methods and their paths.
+Each auth method is enabled under a customizable path. `vault auth list` prints all enabled auth methods and their paths.
 
 Some available auth methods:
 
@@ -22,11 +21,11 @@ Some available auth methods:
 * `okta`, `github`: human-based, centralized OAuth providers
 * tls certificates, k8s, azure, kerberos, `approle` and others are means for S2S authentication
 
-### Entity (User or System) and Aliases
+### Entity (User or System) and Aliases (Linking Entities to Auth Methods)
 
 An entity is something that authenticats with Vault, could be a system or a person. Each entity has 0+ aliases. An alias conceptually is also an entity and links a person/system to an auth method (e.g. entity "Jane" has alias `jsmith` with auth method `userpass` and `funky22` with auth method `github`). 
 
-Entities and Aliases come with a bunch of metadata and a policy. The policies of each can differ - the token generated when logging in will contain both policies.
+Entities and Aliases come with a bunch of metadata and a policy. The policies of each can differ - the token generated when logging in will contain the policies from the entity plus the one from the alias.
 
 It's a bit counterintuitive that the method of authentication brings different permissions, but this is how it works according to [this](https://www.udemy.com/course/hashicorp-vault/learn/lecture/27039872#overview). Example:
 
@@ -42,14 +41,14 @@ You can group entities into Vault Groups. A group comes with a policy. When logg
 
 Some auth methods come with external groups, like scopes in JWT or groups in LDAP. You can map those external groups in Vault to internal groups or policy names.
 
-### Policies
+### Policies: What You're Allowed to Do
 
 A user ("entity") in itself has access to nothing. Only by adding policies to a user or group, you open up the system.
 Policies are cumulative, meaning that you can be subject to multiple policies and you will have access to the superset of all permissions.
 
 Initially, there are 2 policies: `root` and `default`. The first one is added to all root tokens, the second to others. Both policies cannot be deleted and only `default` can be changed. `default` provides "common permissions".
 
-A policy covers paths and defines the allowed verbs on that path (read, create, update, delete, list, sudo and deny). For examples, run `vault policy read default` to see how the `default` policy looks like. The policy is described in HCL, e.g.:
+A policy covers paths and defines the allowed verbs on that path (read, create, update, delete, list, sudo and deny). For examples, run `vault policy read default` to see how the `default` policy looks like. Each policy is described in HCL, e.g.:
 ```
 path "kv/database/nonprod" {
 	capabilities = ["read"]
@@ -64,8 +63,7 @@ Some paths cover administrative functions, e.g. `sys/seal` to seal the vault ins
 
 #### `*` Wildscards in Paths
 
-Policies can contain wildcards in paths (see example above). A wildcard is only allowed at the end of a path.
-A wildcard matches paths of any depth.
+Policies can contain wildcards in paths (see example above). A wildcard is only allowed at the end of a path. A wildcard matches paths of any depth.
 
 Example: `secret/app/f*` matches
 * `secret/app/foo`
@@ -97,6 +95,13 @@ The list of variables isn't long, here's a few examples:
 * `identity.entity.id` entity id
 * `identity.entity.name` entity name
 * `identity.entity.metadata.$METADATAKEY` Metadata associated with the entity.
+
+### Test Driving Policies
+
+Let's say you created a policy and want to try out whether it works: `vault token create -policy="newpolicyname"` will give you a token with that ability.
+
+Next, simply try a few things out that the token is supposed to support. Read a path, write to it and so on.
+
 
 ### Engines and Paths
 Vault comes with different "engines" that you make available under paths. E.g. you can run a K/V store under `secret/`.
