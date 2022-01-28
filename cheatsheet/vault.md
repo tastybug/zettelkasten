@@ -54,7 +54,9 @@
 ### Assessing Tokens
 
 * check what a token entails: `vault token lookup $TOKEN`
-`
+
+### Creating Child Token
+* `vault token create [-policy=bla] [-period=10m]`
 
 ## Working with K/V stores
 

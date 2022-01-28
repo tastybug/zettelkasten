@@ -99,18 +99,38 @@ The list of variables isn't long, here's a few examples:
 ### Assessing Tokens
 
 As described a token is associated with policies which describe what you are allowed to do.
+Beyond that, they have a number of properties:
+
+* Accessor
+* TTL: a default lifespan, which might be extendable via renewals; once reached, it is revoked
+* Policies
+* Max TTL: the max lifespan, including possible renewals; once reached, it is revoked
+* Number of uses left: 0 means unlimited uses
+* renewal status
+* Oprhaned Token
+
+
+#### Token Hierarchy
+
+Tokens can be able to create child tokens. Both can have their individual TTL, but keep in mind that when a parent token is revoked, the child tokens are revoked too, even if they still have TTL left.
 
 #### Service Tokens (OAuth Access Token like)
 
 Service tokens are the default kind of token. They are persisted to the storage backend. They can be renewed, revoked and you can create child tokens.
 
+Service tokens start with `s.`.
+
 #### Batch Tokens (JWT like)
 
-Batch tokens are encrypted blobs. They are not stored to the backend and not replicated across clusters. They can't be renwed, they can't be root tokens, create child tokens and a few more things.
+Batch tokens are encrypted blobs. They are not stored to the backend and not replicated across clusters.
+
+They are limited in their abilities: they can't be renwed, they can't be root tokens, create child tokens and a few more things.
 
 The vault documentation proposed them for situations where MANY clients would need to create (service) tokens at once, making the storage backend slow.
 
-I'm getting the impression that batch tokens are like JWT: self contained, locally usable.
+I'm getting the impression thatbatch tokens are like JWT: self contained, locally usable.
+
+Batch tokens start with `b.`.
 
 ### Test Driving Policies
 
@@ -199,3 +219,15 @@ log_level = INFO"
 ## Dynamic Secrets a.k.a Dynamic Credentials
 
 Explain this closer with an example of AWS.
+
+## Best Practices
+
+### Fetching Secrets Without Recreating Tokens
+
+Imagine you have a docker image that will be in use for months or years. The image will pull vault secrets before starting another process. It's hard to create a new token each time the container starts.
+
+Solution: create a token with a TTL but without a max TTL (or just very long), that you just renew whenever needed.
+
+```
+
+```
