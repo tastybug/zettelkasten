@@ -10,8 +10,9 @@ Is a Hashicorp tool that offers management of certificates and secrets. It comes
 
 ### Auth Methods: Different Ways of Authenticating to Get a Token
 
-Vault supports different means of authentication to then allow access to the secrets, engines and so on. Auth methods are used for different use cases (human vs app). The purpose of each auth method is to ultimately give you a TOKEN. With the token you perform your actions.
-Initially, the only method is the "token method", which simply expects a token being given (e.g. the `root token` that will be pre-generated for you when starting the server in dev mode!).
+Vault supports different means of authentication to then allow access to the secrets, engines and so on. Auth methods are optimized for different human or system to system use cases. The purpose of each auth method is to ultimately give you a token. With the token you perform your actions using any of the interfaces, be it CLI, Web or API.
+
+Initially, the only method is the "token method", which simply expects a token being given (e.g. the `root token` that will be pre-generated for you when starting the server in dev mode).
 
 Each auth method is enabled under a customizable path. `vault auth list` prints all enabled auth methods and their paths.
 
@@ -21,17 +22,17 @@ Some available auth methods:
 * `okta`, `github`: human-based, centralized OAuth providers
 * tls certificates, k8s, azure, kerberos, `approle` and others are means for S2S authentication
 
-### Entity (User or System) and Aliases (Linking Entities to Auth Methods)
+### Entities and Aliases
 
-An entity is something that authenticats with Vault, could be a system or a person. Each entity has 0+ aliases. An alias conceptually is also an entity and links a person/system to an auth method (e.g. entity "Jane" has alias `jsmith` with auth method `userpass` and `funky22` with auth method `github`). 
+An entity is something that authenticats with Vault, could be a system or a person. Each entity has 0+ aliases. An alias links an entity to an auth method (e.g. entity "Jane" has alias `jsmith` with auth method `userpass` and `funky22` with auth method `github`). 
 
-Entities and Aliases come with a bunch of metadata and a policy. The policies of each can differ - the token generated when logging in will contain the policies from the entity plus the one from the alias.
+Entities and Aliases come with a bunch of metadata and 1+ policies. The policies of each can differ - the token generated when logging in will contain the policies from the entity plus the one from the alias.
 
 It's a bit counterintuitive that the method of authentication brings different permissions, but this is how it works according to [this](https://www.udemy.com/course/hashicorp-vault/learn/lecture/27039872#overview). Example:
 
-Entity `jane` has policy `management`.
-Alias for `github` has policy `HR`.
-Alias for `userpass` has policy `finance`.
+1. Entity `jane` has policy `management`.
+2. Alias for `github` has policy `HR`.
+3. Alias for `userpass` has policy `finance`.
 
 When logging in via github, Jane will receive a token with policies `management` and `HR`. When logging in via `userpass`, it's `management` plus `finance`.
 
@@ -43,12 +44,13 @@ Some auth methods come with external groups, like scopes in JWT or groups in LDA
 
 ### Policies: What You're Allowed to Do
 
-A user ("entity") in itself has access to nothing. Only by adding policies to a user or group, you open up the system.
+By default, you have access to nothing. Only by being associated with a policy, you get access.
 Policies are cumulative, meaning that you can be subject to multiple policies and you will have access to the superset of all permissions.
 
-Initially, there are 2 policies: `root` and `default`. The first one is added to all root tokens, the second to others. Both policies cannot be deleted and only `default` can be changed. `default` provides "common permissions".
+Initially, there are 2 policies: `root` and `default`. The first one is added to all root tokens, the second to non-root tokens. Both policies cannot be deleted and only `default` can be changed. `default` provides "common permissions".
 
-A policy covers paths and defines the allowed verbs on that path (read, create, update, delete, list, sudo and deny). For examples, run `vault policy read default` to see how the `default` policy looks like. Each policy is described in HCL, e.g.:
+A policy covers paths and defines the allowed verbs on that path (`read`, `create`, `update`, `delete`, `list`, `sudo` and `deny`). For example, run `vault policy read default` to see what the `default` policy allows. Each policy is described in HCL, e.g.:
+
 ```
 path "kv/database/nonprod" {
 	capabilities = ["read"]
@@ -59,13 +61,14 @@ path "sys/policies/*" {
 }
 ```
 
-Some paths cover administrative functions, e.g. `sys/seal` to seal the vault instance. To allow access to those, the capability `sudo` is required.
+Some paths cover administrative functions, e.g. `sys/seal` to seal the vault instance. These special paths require `sudo` capability.
 
 #### `*` Wildscards in Paths
 
 Policies can contain wildcards in paths (see example above). A wildcard is only allowed at the end of a path. A wildcard matches paths of any depth.
 
-Example: `secret/app/f*` matches
+Example: `secret/app/f*` matches:
+
 * `secret/app/foo`
 * `secret/app/foo/bar/baz`
 * but not `secret/app`
@@ -75,6 +78,7 @@ Example: `secret/app/f*` matches
 A `+` in a patch supports wildcard matching for a single directory in the path. 
 
 Example: `secret/+/+/db` matches:
+
 * `secret/app/nonprod/db`
 * `secret/app/prod/db`
 * but not `secret/prod/db
@@ -83,7 +87,7 @@ Example: `secret/+/+/db` matches:
 #### Templating
 
 There is variable replacement in some policy strings with values available to the token.
-Here is an example for a generic policy statement that can apply to many users sharing a policy. It allows every user to list and create and read data under `secret/data/USERNAME/\*`:
+Here is an example for a generic policy statement that can apply to many users sharing a policy. It allows every user to list and create and read data under `secret/data/USERNAME/*`:
 
 ```
 path "secret/data/{{identity.entity.name}}/*" {
@@ -92,27 +96,27 @@ path "secret/data/{{identity.entity.name}}/*" {
 ```
 
 The list of variables isn't long, here's a few examples:
+
 * `identity.entity.id` entity id
 * `identity.entity.name` entity name
 * `identity.entity.metadata.$METADATAKEY` Metadata associated with the entity.
 
-### Assessing Tokens
+### Tokens
 
-As described a token is associated with policies which describe what you are allowed to do.
-Beyond that, they have a number of properties:
+As described a token is associated with policies which describe what you are allowed to do. `vault token lookup $token` will additionally tell you about metadata that applies to the token:
 
-* Accessor
-* TTL: a default lifespan, which might be extendable via renewals; once reached, it is revoked
-* Policies
-* Max TTL: the max lifespan, including possible renewals; once reached, it is revoked
+* Accessor: ?
+* TTL: a default lifespan, which might be extendable via renewals; once reached, the token is revoked
+* Policies: the superset of what you can do
+* Max TTL: the max lifespan; renewals in sum cannot exceed this
 * Number of uses left: 0 means unlimited uses
-* renewal status
-* Oprhaned Token
+* Renewable: whether it's renewable
+* Orphaned Token: if true, parental revokation does not propagate
 
 
 #### Token Hierarchy
 
-Tokens can be able to create child tokens. Both can have their individual TTL, but keep in mind that when a parent token is revoked, the child tokens are revoked too, even if they still have TTL left.
+Some token (not batch, not use-limit and maybe others) are able to create child tokens. Both can have their individual TTL, but keep in mind that when a parent token is revoked, the child tokens are revoked too, even if they still have TTL left.
 
 #### Service Tokens (OAuth Access Token like)
 
@@ -222,12 +226,36 @@ Explain this closer with an example of AWS.
 
 ## Best Practices
 
-### Fetching Secrets Without Recreating Tokens
+### Periodic, Renewable Tokens
 
 Imagine you have a docker image that will be in use for months or years. The image will pull vault secrets before starting another process. It's hard to create a new token each time the container starts.
 
-Solution: create a token with a TTL but without a max TTL (or just very long), that you just renew whenever needed.
+Solution: create a periodic token without a TTL or max TTL. The token can be renewed indefinitly while a period is still active. Once a period is over, the token is revoked.
+
+Make sure that the token has a policy attached to it that allows it to renew itself. Creating a token with `period` however requires `sudo` capability.
+
+```
+# (you logged in before)
+vault token create -policy=some-policy -period=2m
+# do some work
+vault token renew $token
 
 ```
 
+### I need a token with a use limit
+
+You want a token that can only be used once. Watch out, logging in already seems to consume a use.
+Limited use tokens cannot be 
+
 ```
+vault token create -use-limit=3
+```
+
+### Give me a token that does not expire due to its parent
+
+Revokation of a parent token due to TTL or manual revokation always revokes all child tokens. You want a token that is not affected by this. This requires `sudo` capability.
+
+```
+vault token create [-policy=bla] -orphan=true
+```
+
