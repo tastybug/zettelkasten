@@ -96,6 +96,22 @@ The list of variables isn't long, here's a few examples:
 * `identity.entity.name` entity name
 * `identity.entity.metadata.$METADATAKEY` Metadata associated with the entity.
 
+### Assessing Tokens
+
+As described a token is associated with policies which describe what you are allowed to do.
+
+#### Service Tokens (OAuth Access Token like)
+
+Service tokens are the default kind of token. They are persisted to the storage backend. They can be renewed, revoked and you can create child tokens.
+
+#### Batch Tokens (JWT like)
+
+Batch tokens are encrypted blobs. They are not stored to the backend and not replicated across clusters. They can't be renwed, they can't be root tokens, create child tokens and a few more things.
+
+The vault documentation proposed them for situations where MANY clients would need to create (service) tokens at once, making the storage backend slow.
+
+I'm getting the impression that batch tokens are like JWT: self contained, locally usable.
+
 ### Test Driving Policies
 
 Let's say you created a policy and want to try out whether it works: `vault token create -policy="newpolicyname"` will give you a token with that ability.

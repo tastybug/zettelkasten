@@ -51,6 +51,11 @@
 5. `vault policy write funky-policy /tmp/funky.hcl`
 6. `vault token create -policy="funky-policy"` to create a token to test things out
 
+### Assessing Tokens
+
+* check what a token entails: `vault token lookup $TOKEN`
+`
+
 ## Working with K/V stores
 
 * Check under which path the KV store is: `vault secrets list`
