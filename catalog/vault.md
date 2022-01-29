@@ -64,7 +64,6 @@ path "sys/policies/*" {
 
 Some paths cover administrative functions, e.g. `sys/seal` to seal the vault instance. These special paths require `sudo` capability.
 
-
 #### Test Driving Policies
 
 Let's say you created a policy and want to try out whether it works: `vault token create -policy="newpolicyname"` will give you a token with that ability.
@@ -124,7 +123,8 @@ As described a token is associated with policies which describe what you are all
 
 #### Assessing Tokens
 
-* check what a token entails: `vault token lookup $TOKEN`
+* check metadata and capabilities of a token: `vault token lookup $TOKEN`
+* check what capabilities a token has at a path: `vault token capabilties $TOKEN secrts/data/prod/db`
 
 #### Creating Child Token
 * `vault token create [-policy=bla] [-period=10m]`
@@ -190,9 +190,23 @@ The K/V engine is available under a path, say `secret/`. You are supposed to add
 Example: `vault kv put secret/nonprod/database 'password=bla' 'username=dba'`
 
 This results in:
+
+```
 * secret/nonprod/database // <- the node
 	* password=bla
 	* username=dba
+```
+
+#### KV `v1` vs `v2`: don't trip over `/data/`
+Watch out: there is a v1 KV engine and a v2 KV engine. They differ insofar the v2 allows for more finegrained ACLs. It is however confusing that when configuring paths for a v2, you need to remember to add a `/path` in between:
+
+```
+path "secret/data/dev/foo" {  
+   // whatever
+}
+```
+ 
+When accessing the path, you _omit_ mention the `/data`: `vault kv get secret/dev/foo`.
 
 ## Backends
 

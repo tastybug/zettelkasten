@@ -1,4 +1,4 @@
-# Vault
+# Vault Cheatsheet
 
 ## Starting a CLI session
 
@@ -76,10 +76,10 @@ vault login s.WtBjMPdstV2CEVv28eAQQrrL
 5. `vault policy write funky-policy /tmp/funky.hcl`
 6. `vault token create -policy="funky-policy"` to create a token to test things out
 
-## Working with K/V stores
+## Working with K/V stores using CLI
 
 * Check under which path the KV store is: `vault secrets list`
-* Add value: `vault kv put secret/database 'password=2hard4u'`
+* Add value: `vault kv put secret/database 'password=2hard4u' 'user=dba'`
 * Get value: `vault kv get secret/databse`
 
 
@@ -127,3 +127,14 @@ vault token create [-policy=bla] -orphan
 2. `OUTPUT=$(vault login -method userpass username=pbartsch password=2hard4u)`
 3. `VAULT_TOKEN=$(echo $OUTPUT | jq '.auth.client_token' -j)`
 4. `vault login $VAULT_TOKEN`
+
+### Create Token via API (example with `userpass`)
+
+It's possible to remotely log in and create a token that way. This example assumes that there is a user `pbartsch` with password `123` set up.
+
+```
+echo '{"password": "123"}' > payload.json
+$ curl -X POST -d @payload.json http://127.0.0.1:8200/v1/auth/userpass/login/pbartsch | jq .auth.client_token
+"s.U970zeIP86fkAKVbMCU7EQw3"
+
+```
