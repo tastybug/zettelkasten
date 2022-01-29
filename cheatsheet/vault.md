@@ -128,13 +128,16 @@ vault token create [-policy=bla] -orphan
 3. `VAULT_TOKEN=$(echo $OUTPUT | jq '.auth.client_token' -j)`
 4. `vault login $VAULT_TOKEN`
 
-### Create Token via API (example with `userpass`)
+### Create & Use Token via API (example with `userpass`)
 
 It's possible to remotely log in and create a token that way. This example assumes that there is a user `pbartsch` with password `123` set up.
 
 ```
-echo '{"password": "123"}' > payload.json
+# produce a token using userpass method
+$ echo '{"password": "123"}' > payload.json
 $ curl -X POST -d @payload.json http://127.0.0.1:8200/v1/auth/userpass/login/pbartsch | jq .auth.client_token
 "s.U970zeIP86fkAKVbMCU7EQw3"
 
+# let's try a call with it
+$ curl -X POST -d '{"token": "s.U970zeIP86fkAKVbMCU7EQw3"}' -H 'Authorization: Bearer s.U970zeIP86fkAKVbMCU7EQw3' http://127.0.0.1:80/v1/auth/token/lookup | jq
 ```
