@@ -8,7 +8,9 @@
 5. Alternatively, with a token already at hand, set a `VAULT_TOKEN=asd123` env variable.
 6. There is now a session, further commands don't have to be authenticated (the token is stored in `~/.vault-token` and automatically read from there)
 
-## Admin work: configuring auth methods
+## Admin work 
+
+### Configuring Auth Methods
 
 * `vault auth list` what auth methods are active
 * `vault auth enable [-path=foo] [-description='some description'] approle`: enabled `approle` method under path `foo`
@@ -26,23 +28,46 @@
 
 ### Auth method `approle` configuration and use
 
-1. `vault auth enable approle`
-2. `vault write auth/approle/role/bryan policies=bryan token_ttl=20m`: set up a role and link it to a policy
-3. `vault list auth/approle/role`: verify
-4. `vault read auth/approle/role/bryan/role-id` this shows a stable id for the bryan role. `role_id` is the credential name.
-5. `vault write -force auth/approle/role/bryan/secret-id`: this creates a secret-id (this is different with each write). The `secret_id` is the credential secret!
-6. `vault write auth/approle/login role_id=foo secret_id=bar`: does the login; this prints a token.
-7. `vault login MY_NEW_TOKEN` do this if you want to use the token for the current CLI session
+```
+$ vault auth enable -path=approller approle
+Success! Enabled approle auth method at: approller/
 
-### Log in, put token into a variable
+$ vault write auth/approller/role/move-listing-guardian policies=kv-wiz2 token_ttl=20m
+Success! Data written to: auth/approller/role/move-listing-guardian
 
-1. Do the userpass setup from above
-2. `export VAULT_FORMAT=json`
-3. `OUTPUT=$(vault login -method userpass username=pbartsch password=2hard4u) 
-4. `VAULT_TOKEN=$(echo $OUTPUT | jq '.auth.client_token' -j)`
-5. `vault login $VAULT_TOKEN`
+# the value of role_id is the username later on
+vault read auth/approller/role/move-listing-guardian/role-id
+Key        Value
+---        -----
+role_id    2acbb216-271a-6d58-7c60-73f2b3faeecb
 
-### Working with policies (= RBAC)
+# secret_id contains the password for the login
+$ vault write -force auth/approller/role/move-listing-guardian/secret-id
+Key                   Value
+---                   -----
+secret_id             bc848681-e013-63a5-0c83-30f8130af182
+secret_id_accessor    13f37157-d4ce-3f16-2a59-b0973d6816f8
+secret_id_ttl         0s
+
+# produce a token using the "user" and "password"
+$ vault write auth/approller/login role_id=2acbb216-271a-6d58-7c60-7
+3f2b3faeecb secret_id=bc848681-e013-63a5-0c83-30f8130af182
+Key                     Value
+---                     -----
+token                   s.WtBjMPdstV2CEVv28eAQQrrL
+token_accessor          HE6tdJz1KSw5DhZ6diuHOMXM
+token_duration          20m
+token_renewable         true
+token_policies          ["default" "kv-wiz2"]
+identity_policies       []
+policies                ["default" "kv-wiz2"]
+token_meta_role_name    move-listing-guardian
+
+# optionally log in now with the token
+vault login s.WtBjMPdstV2CEVv28eAQQrrL
+```
+
+### Setting Up a New Policy
 
 1. `vault policy list` gives you existing policies
 2. `vault policy read default` describes what the `default` policy is allowing. The format given is HCL.
@@ -51,16 +76,54 @@
 5. `vault policy write funky-policy /tmp/funky.hcl`
 6. `vault token create -policy="funky-policy"` to create a token to test things out
 
-### Assessing Tokens
-
-* check what a token entails: `vault token lookup $TOKEN`
-
-### Creating Child Token
-* `vault token create [-policy=bla] [-period=10m]`
-
 ## Working with K/V stores
 
 * Check under which path the KV store is: `vault secrets list`
 * Add value: `vault kv put secret/database 'password=2hard4u'`
 * Get value: `vault kv get secret/databse`
 
+
+## Best Practices
+
+### Dynamic Secrets a.k.a Dynamic Credentials
+
+Explain this closer with an example of AWS.
+
+### Periodic, Renewable Tokens
+
+Imagine you have a docker image that will be in use for months or years. The image will pull vault secrets before starting another process. It's hard to create a new token each time the container starts.
+
+Solution: create a periodic token. Periodic tokens have a TTL but no max TTL. They can live forever, as long as you renew them within their TTL.
+
+Make sure that the token has a policy attached to it that allows it to renew itself. Creating a token with `period` requires `sudo` capability.
+
+```
+# (you logged in before)
+vault token create -policy=some-policy -period=2m
+# do some work
+vault token renew $token
+
+```
+
+### I need a token with a use limit
+
+You want a token that can only be used once. Watch out, logging in already seems to consume a use.
+
+```
+vault token create -use-limit=3
+```
+
+### Give me a token that does not expire due to its parent
+
+Revokation of a parent token due to TTL or manual revokation always revokes all child tokens. You want a token that is not affected by this. This requires `sudo` capability.
+
+```
+vault token create [-policy=bla] -orphan
+```
+
+### Log in, put token into a variable
+
+1. `export VAULT_FORMAT=json`
+2. `OUTPUT=$(vault login -method userpass username=pbartsch password=2hard4u)`
+3. `VAULT_TOKEN=$(echo $OUTPUT | jq '.auth.client_token' -j)`
+4. `vault login $VAULT_TOKEN`

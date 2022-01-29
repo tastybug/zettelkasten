@@ -1,12 +1,13 @@
 # Vault
 
+## What it is
 Is a Hashicorp tool that offers management of certificates and secrets. It comes in 3 flavors:
 
 * open source: self hosted, free, dynamic secrets, ACL, key rolling, encryption as a service, aws/azure/gcp auto unseal, local clustering in a single DC (here I'm not sure why this cannot span different DCs)
 * enterprise: self hosted, non-free, all of open source plus disaster recovery, namespaces, replication (aka multi-cluster setups), read-only nodes, HSM auto-unseal, MFA, Sentinel, FIPS 140-2 & Seal Wrap (some gov standard)
 * vault on HCP: hosted, non-free, fully managed, scalable, pay by the hour
 
-## Thinking like Vault
+## Vault Concepts
 
 ### Auth Methods: Different Ways of Authenticating to Get a Token
 
@@ -42,7 +43,7 @@ You can group entities into Vault Groups. A group comes with a policy. When logg
 
 Some auth methods come with external groups, like scopes in JWT or groups in LDAP. You can map those external groups in Vault to internal groups or policy names.
 
-### Policies: What You're Allowed to Do
+### Policies: Defining What a Token Can Do
 
 By default, you have access to nothing. Only by being associated with a policy, you get access.
 Policies are cumulative, meaning that you can be subject to multiple policies and you will have access to the superset of all permissions.
@@ -62,6 +63,13 @@ path "sys/policies/*" {
 ```
 
 Some paths cover administrative functions, e.g. `sys/seal` to seal the vault instance. These special paths require `sudo` capability.
+
+
+#### Test Driving Policies
+
+Let's say you created a policy and want to try out whether it works: `vault token create -policy="newpolicyname"` will give you a token with that ability.
+
+Next, simply try a few things out that the token is supposed to support. Read a path, write to it and so on. This can be done on a dev server instance.
 
 #### `*` Wildscards in Paths
 
@@ -114,6 +122,13 @@ As described a token is associated with policies which describe what you are all
 * Orphaned Token: if true, parental revokation does not propagate
 
 
+#### Assessing Tokens
+
+* check what a token entails: `vault token lookup $TOKEN`
+
+#### Creating Child Token
+* `vault token create [-policy=bla] [-period=10m]`
+
 #### Token Hierarchy
 
 Some token (not batch, not use-limit and maybe others) are able to create child tokens. Both can have their individual TTL, but keep in mind that when a parent token is revoked, the child tokens are revoked too, even if they still have TTL left.
@@ -122,7 +137,22 @@ Some token (not batch, not use-limit and maybe others) are able to create child 
 
 Service tokens are the default kind of token. They are persisted to the storage backend. They can be renewed, revoked and you can create child tokens.
 
-Service tokens start with `s.`.
+This is how you create one (`-type=service` is the default and can be left out):
+
+```
+~ # vault token create -policy=default [-type=service]
+Key                  Value
+---                  -----
+token                s.703mZQRwzr178Oii5QjBraab
+token_accessor       XAlpRAtF097z6WOLegdZGnBr
+token_duration       768h
+token_renewable      true
+token_policies       ["default"]
+identity_policies    []
+policies             ["default"]
+```
+
+As you can see, service tokens start with `s.`.
 
 #### Batch Tokens (JWT like)
 
@@ -130,18 +160,25 @@ Batch tokens are encrypted blobs. They are not stored to the backend and not rep
 
 They are limited in their abilities: they can't be renwed, they can't be root tokens, create child tokens and a few more things.
 
-The vault documentation proposed them for situations where MANY clients would need to create (service) tokens at once, making the storage backend slow.
+It is possible to configure an auth method as such that it produces batch tokens by default.
 
-I'm getting the impression thatbatch tokens are like JWT: self contained, locally usable.
+The vault documentation proposes to use them when many clients (e.g. 100.000 containers) would request service tokens at once, where the backend (which _also_ syncs service tokens across clusters) would be a bottleneck. I'm getting the impression thatbatch tokens are like JWT: self contained, locally usable.
 
-Batch tokens start with `b.`.
+This is how you create one:
 
-### Test Driving Policies
-
-Let's say you created a policy and want to try out whether it works: `vault token create -policy="newpolicyname"` will give you a token with that ability.
-
-Next, simply try a few things out that the token is supposed to support. Read a path, write to it and so on.
-
+```
+~ # vault token create -policy=default -type=batch
+Key                  Value
+---                  -----
+token                b.AAAAAQLsVGFi5IrPAlUQiGOXUw6HTvFMHOxZ-HANvk-t0XvyDzTnENO5CAK9Xl7LSJC7D-VrvW3dWuTFNJrDof8XxaBVeAGGFy1u-d3H4UeX0Y4YpTKkrgebNpZaYPm17pjzGVM
+token_accessor       n/a
+token_duration       768h
+token_renewable      false
+token_policies       ["default"]
+identity_policies    []
+policies             ["default"]
+```
+As can be seen, batch tokens start with a `b.`.
 
 ### Engines and Paths
 Vault comes with different "engines" that you make available under paths. E.g. you can run a K/V store under `secret/`.
@@ -166,7 +203,7 @@ Popular backends are cloud based like S3, Consul and the internal backend, calle
 * Consul: can be scaled independently, increasing throughput
 * Raft: is a file on the FS of each Vault node (the node is stateful!), no extra network hop necessary; sync is done transparently between the nodes
 
-## How Backends Influence Scaling
+### How Backends Influence Scaling
 
 It can be run stand-alone, in clusters and with multi-cluster setup, where the clusters stay in sync.
 A cluster requires a backend that supports high availability. A cluster has a leader, the rest is standby. You can also have 2 backends, one for the leader-lock (stanza `ha_storage`) and the other for the actual data (stanza `storage`).
@@ -175,19 +212,21 @@ Calling a standby gets you redirected to the leader - this means that HA does no
 
 More on this here: https://www.vaultproject.io/docs/concepts/ha
 
-## Dev Server
+## Run Modes
+
+### Dev Server
 
 You can run Vault in dev server mode (`vault server -dev`), which runs in-memory. To access it with the CLI, run `export VAULT_ADDR='http://127.0.0.1:8200'` first, then verify with `vault secrets list`.
 
 Dev server comes with a K/V store under `/secret` (verify this with `vault secrets list`).
 
-## Productive Server
+### Productive Server
 
 Usually you can use Packer to create a VM image with Vault or Terraform to setup Vault in a VM.
 
 Running the server requires a configuration file: `vault server -config=<file>`, in a persistent VM one also needs systemd configuration.
 
-### Configuration with Internal Storage and no TLS (Example)
+#### Configuration with Internal Storage and no TLS (Example)
 
 ```
 storage "raft" {
@@ -220,42 +259,4 @@ ui = true
 log_level = INFO"
 ```
 
-## Dynamic Secrets a.k.a Dynamic Credentials
-
-Explain this closer with an example of AWS.
-
-## Best Practices
-
-### Periodic, Renewable Tokens
-
-Imagine you have a docker image that will be in use for months or years. The image will pull vault secrets before starting another process. It's hard to create a new token each time the container starts.
-
-Solution: create a periodic token without a TTL or max TTL. The token can be renewed indefinitly while a period is still active. Once a period is over, the token is revoked.
-
-Make sure that the token has a policy attached to it that allows it to renew itself. Creating a token with `period` however requires `sudo` capability.
-
-```
-# (you logged in before)
-vault token create -policy=some-policy -period=2m
-# do some work
-vault token renew $token
-
-```
-
-### I need a token with a use limit
-
-You want a token that can only be used once. Watch out, logging in already seems to consume a use.
-Limited use tokens cannot be 
-
-```
-vault token create -use-limit=3
-```
-
-### Give me a token that does not expire due to its parent
-
-Revokation of a parent token due to TTL or manual revokation always revokes all child tokens. You want a token that is not affected by this. This requires `sudo` capability.
-
-```
-vault token create [-policy=bla] -orphan=true
-```
 
