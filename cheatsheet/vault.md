@@ -121,6 +121,25 @@ Revokation of a parent token due to TTL or manual revokation always revokes all 
 vault token create [-policy=bla] -orphan
 ```
 
+### Give Me a Token That Can Only Be Used By My Jenkins Server
+
+This requirement can be solved by a CIDR-Bound Token. This is a regular token, but a client can only login from a particular network block.
+Some auth methods (e.g. `approle`) can set CIDR rules as part of the method configuration, but for token not produced by `approle` you still can achieve this with a token role, so this is more flexible.
+
+Check the [configuration options](https://www.vaultproject.io/api/auth/token#create-update-token-role) for roles. Create a role, then create a token with the role:
+
+```
+~ # vault write auth/token/roles/foo token_bound_cidrs="192.168.0.0/16"
+~ # vault login s.UoXBHRc2CJoJRscUmqT1I1uu
+Error authenticating: error looking up token: Error making API request.
+
+URL: GET http://0.0.0.0:8200/v1/auth/token/lookup-self
+Code: 403. Errors:
+
+* permission denied
+```
+
+
 ### Log in, put token into a variable
 
 1. `export VAULT_FORMAT=json`

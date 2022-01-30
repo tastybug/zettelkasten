@@ -1,13 +1,36 @@
 # Vault
 
-## What it is
-Is a Hashicorp tool that offers management of certificates and secrets. It comes in 3 flavors:
+Is a Hashicorp tool that offers management of certificates and secrets. The main selling point is the creation of dynamic secrets. Depending on how far you want to take this, dynamic secrets _can_ be:
+
+* as short lived as you can get away with
+* tailored to the needs of a particular client 
+* created on demand
+
+Compare this to the classic approach of having static credentials, shared between multiple parties, stored in a variety of places. This is far from optimal:
+
+1. You can't easily rotate those secrets
+  1. it not always clear who uses the secret and could cause an outage 
+  2. you need to update the credential in many places
+  3. automated credential rotation is usally an afterthought and manual rotation is a common approach, requiring a specialist that is not available at night during an incident
+2. secrets can easily leak due to large attack surface:
+  1. it's many services
+  2. possibly many data/configuration sources
+
+### Different Distributions / Flavors of Vault
+ comes in 3 flavors:
 
 * open source: self hosted, free, dynamic secrets, ACL, key rolling, encryption as a service, aws/azure/gcp auto unseal, local clustering in a single DC (here I'm not sure why this cannot span different DCs)
 * enterprise: self hosted, non-free, all of open source plus disaster recovery, namespaces, replication (aka multi-cluster setups), read-only nodes, HSM auto-unseal, MFA, Sentinel, FIPS 140-2 & Seal Wrap (some gov standard)
 * vault on HCP: hosted, non-free, fully managed, scalable, pay by the hour
 
-## Vault Concepts
+## Interacting with Vault
+
+Speaking in abstract, a session goes like this:
+
+* a client authenticates (__see auth methods__), creating an access token (__see tokens__)
+* uses that token to perform operations on engines (__see Engines__) that are available behind paths; auth state and engine state is stored in the backend (__see Backend__)
+
+To make it easy to try things out, you can run Vault in dev mode (__see Run Modes__).
 
 ### Auth Methods: Different Ways of Authenticating to Get a Token
 
@@ -23,7 +46,7 @@ Some available auth methods:
 * `okta`, `github`: human-based, centralized OAuth providers
 * tls certificates, k8s, azure, kerberos, `approle` and others are means for S2S authentication
 
-### Entities and Aliases
+#### Entities and Aliases
 
 An entity is something that authenticats with Vault, could be a system or a person. Each entity has 0+ aliases. An alias links an entity to an auth method (e.g. entity "Jane" has alias `jsmith` with auth method `userpass` and `funky22` with auth method `github`). 
 
@@ -37,13 +60,13 @@ It's a bit counterintuitive that the method of authentication brings different p
 
 When logging in via github, Jane will receive a token with policies `management` and `HR`. When logging in via `userpass`, it's `management` plus `finance`.
 
-### Vault Groups
+#### Vault Groups
 
 You can group entities into Vault Groups. A group comes with a policy. When logging in an entity in a group, you receive a token with 3 policies attached to it: group, entity and alias.
 
 Some auth methods come with external groups, like scopes in JWT or groups in LDAP. You can map those external groups in Vault to internal groups or policy names.
 
-### Policies: Defining What a Token Can Do
+#### Policies: Defining What a Token Can Do
 
 By default, you have access to nothing. Only by being associated with a policy, you get access.
 Policies are cumulative, meaning that you can be subject to multiple policies and you will have access to the superset of all permissions.
@@ -64,13 +87,13 @@ path "sys/policies/*" {
 
 Some paths cover administrative functions, e.g. `sys/seal` to seal the vault instance. These special paths require `sudo` capability.
 
-#### Test Driving Policies
+##### Test Driving Policies
 
 Let's say you created a policy and want to try out whether it works: `vault token create -policy="newpolicyname"` will give you a token with that ability.
 
 Next, simply try a few things out that the token is supposed to support. Read a path, write to it and so on. This can be done on a dev server instance.
 
-#### `*` Wildscards in Paths
+##### `*` Wildscards in Paths
 
 Policies can contain wildcards in paths (see example above). A wildcard is only allowed at the end of a path. A wildcard matches paths of any depth.
 
@@ -80,7 +103,7 @@ Example: `secret/app/f*` matches:
 * `secret/app/foo/bar/baz`
 * but not `secret/app`
 
-#### `+` Wildcards in Paths
+##### `+` Wildcards in Paths
 
 A `+` in a patch supports wildcard matching for a single directory in the path. 
 
@@ -91,7 +114,7 @@ Example: `secret/+/+/db` matches:
 * but not `secret/prod/db
 * and not `secret/app/prod`
 
-#### Templating
+##### Templating
 
 There is variable replacement in some policy strings with values available to the token.
 Here is an example for a generic policy statement that can apply to many users sharing a policy. It allows every user to list and create and read data under `secret/data/USERNAME/*`:
@@ -110,9 +133,29 @@ The list of variables isn't long, here's a few examples:
 
 ### Tokens
 
-As described a token is associated with policies which describe what you are allowed to do. `vault token lookup $token` will additionally tell you about metadata that applies to the token:
+As described a token is associated with policies which describe what you are allowed to do. Token usually have a limited lifespan (TTL).
 
-* Accessor: ?
+#### Roles
+
+Instead of passing a number of parameters, one can create a role that brings a particular configuration of parameters.
+
+Example: 
+
+```
+$ vault write auth/token/roles/stuff \
+    allowed_policies="policy1, policy2, policy3" \
+    orphan=true \
+    period=8h
+    
+$ vault token create -role=stuff
+# and so on
+```
+
+#### Assessing Tokens
+
+You can check the metadata and capabilities of a token using: `vault token lookup $TOKEN`. This gives you the following properties:
+
+* Accessor: an alias for the token (can be used for lookup, renewal, revokations, capability checks)
 * TTL: a default lifespan, which might be extendable via renewals; once reached, the token is revoked
 * Policies: the superset of what you can do
 * Max TTL: the max lifespan; renewals in sum cannot exceed this
@@ -120,20 +163,26 @@ As described a token is associated with policies which describe what you are all
 * Renewable: whether it's renewable
 * Orphaned Token: if true, parental revokation does not propagate
 
-
-#### Assessing Tokens
-
-* check metadata and capabilities of a token: `vault token lookup $TOKEN`
+* check a token via it's `accessor`, which is a non-secret token alias: `vault token lookup -accessor $some-accessor`
 * check what capabilities a token has at a path: `vault token capabilties $TOKEN secrts/data/prod/db`
 
 #### Creating Child Token
+
+Creating a child token means that you will bind them to the TTL of the current token (unless you create orphans).
+
 * `vault token create [-policy=bla] [-period=10m]`
 
 #### Token Hierarchy
 
-Some token (not batch, not use-limit and maybe others) are able to create child tokens. Both can have their individual TTL, but keep in mind that when a parent token is revoked, the child tokens are revoked too, even if they still have TTL left.
+Some token (not batch, not use-limit and maybe others) are able to create child tokens. Both can have their individual TTL, but keep in mind that when a parent token is revoked (manually or due to TTL), the child tokens are revoked too, _even if they still have TTL left_!
 
-#### Service Tokens (OAuth Access Token like)
+#### TTL
+
+Every non-root token has a TTL and some have a maximum TTL. A token can be configured to be renewable, which means that you increase the TTL by a certain amount of time. Once maximum TTL is reached, the token is revoked disregarding the possibly remaining TTL.
+
+* The default TTL is 768h (32 days), which can be altered in the vault configuration file like this: `default_lease_ttl = 24h`.
+
+#### Service Tokens (Like OAuth Access Token)
 
 Service tokens are the default kind of token. They are persisted to the storage backend. They can be renewed, revoked and you can create child tokens.
 
@@ -180,8 +229,19 @@ policies             ["default"]
 ```
 As can be seen, batch tokens start with a `b.`.
 
-### Engines and Paths
-Vault comes with different "engines" that you make available under paths. E.g. you can run a K/V store under `secret/`.
+## Engines a.k.a. Secrets Engines
+
+Vault comes with different "engines" that you make available under paths. The purpose of an engine is to store or generate dynamic secrets or certificates.
+
+The full list of engines can be found [here](https://www.vaultproject.io/docs/secrets).
+
+### Cubbyhole
+
+> The cubbyhole secrets engine is used to store arbitrary secrets within the configured physical storage for Vault namespaced to a token. In cubbyhole, paths are scoped per token. No token can access another token's cubbyhole. When the token expires, its cubbyhole is destroyed.
+
+> Also unlike the kv secrets engine, because the cubbyhole's lifetime is linked to that of an authentication token, there is no concept of a TTL or refresh interval for values contained in the token's cubbyhole.
+
+> Writing to a key in the cubbyhole secrets engine will completely replace the old value.
 
 ### K/V Engine
 
