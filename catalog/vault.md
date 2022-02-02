@@ -9,7 +9,7 @@ Is a Hashicorp tool that offers management of certificates and secrets. The main
 Compare this to the classic approach of having static credentials, shared between multiple parties, stored in a variety of places. This is far from optimal:
 
 1. You can't easily rotate those secrets
-  1. it not always clear who uses the secret and could cause an outage 
+  1. it not always clear who uses the secret and could cause an outage
   2. you need to update the credential in many places
   3. automated credential rotation is usally an afterthought and manual rotation is a common approach, requiring a specialist that is not available at night during an incident
 2. secrets can easily leak due to large attack surface:
@@ -229,11 +229,18 @@ policies             ["default"]
 ```
 As can be seen, batch tokens start with a `b.`.
 
-## Engines a.k.a. Secrets Engines
+## Secrets Engines in General
 
-Vault comes with different "engines" that you make available under paths. The purpose of an engine is to store or generate dynamic secrets or certificates.
+There are 4 categories of engines:
+
+* Cloud Secrets Engines: AWS, Azure, GCP, GCP KMS, Alibaba
+* Database Secrets Engines: Apache Cassandra, InfluxDB, MongoDB, MSSQL, MySQL, PostgreSQL, Oracle, SAP HANA and more
+* Machine Level Engines: Active Directory, Consul, K/V, RabbitMQ, Nomad, SSH, TOTP and more
+* Encryption Engines: Transit (hashing -, encryption/decryption - and randomness source as a service) and PKI
 
 The full list of engines can be found [here](https://www.vaultproject.io/docs/secrets).
+
+## Looking At a Few Engines in Detail
 
 ### Cubbyhole
 
@@ -245,11 +252,11 @@ The full list of engines can be found [here](https://www.vaultproject.io/docs/se
 
 ### K/V Engine
 
-The K/V engine is available under a path, say `secret/`. You are supposed to add nodes under the root, to which you attach k/v pair(s).
+K/V is a pure storage engine to which the user adds nodes under the root (`secret/` by default), to which one attaches k/v pair(s).
 
-Example: `vault kv put secret/nonprod/database 'password=bla' 'username=dba'`
+Example: 
 
-This results in:
+`vault kv put secret/nonprod/database 'password=bla' 'username=dba'` results in:
 
 ```
 * secret/nonprod/database // <- the node
@@ -258,7 +265,7 @@ This results in:
 ```
 
 #### KV `v1` vs `v2`: don't trip over `/data/`
-Watch out: there is a v1 KV engine and a v2 KV engine. They differ insofar the v2 allows for more finegrained ACLs. It is however confusing that when configuring paths for a v2, you need to remember to add a `/path` in between:
+Watch out: there is a v1 KV engine and a v2 KV engine. They differ insofar the v2 allows for more finegrained ACLs and it offers versioning. It is however confusing that when configuring paths for a v2, you need to remember to add a `/path` in between:
 
 ```
 path "secret/data/dev/foo" {  
@@ -267,6 +274,66 @@ path "secret/data/dev/foo" {
 ```
  
 When accessing the path, you _omit_ mention the `/data`: `vault kv get secret/dev/foo`.
+
+#### Best Practices
+
+It's recommended to prepare an extendible tree structure that makes it easy to generate proper policies and is intuitive to use. Example:
+
+* prod/
+  * app1
+  * app2
+* nonprod/
+  * app1
+  * app2
+* common
+  * ...
+
+Remember that there can be multiple mounted K/V stores under different paths. This will help to not have overly complicated trees.
+
+### AWS Secrets Engine
+
+This is a credentials "generating" engine that provides access tokens to perform actions on AWS infrastructure. When accessing this engine, it will connect to AWS and prepare a tailored "single use" user for the caller.
+
+It supports 3 ways to generate creds:
+
+- `iam_user` generates an IAM user with access and secret key
+- `assumed_role` uses `sts:AssumeRole` to generate creds
+- `federation_token` uses `sts:GetFederationToken`
+
+#### IAM User (for Credentials For a Single AWS Account)
+
+This engine will create users for a single AWS account. There is nothing preventing you from enabling this engines multiple times (at different paths), each aiming at different AWS accounts.
+
+When setting this use case up, you need to:
+
+1. Create one or more roles that define a particular IAM user and the associated IAM policy
+2. Generally provide `access_key` and `secret_key` for an administrative IAM user that Vault utilizes to create the role-bound with. This administrative user needs to be allowed to also delete users so that TTL housekeeping can occur.
+
+This is the process later on when accessing the engine:
+
+1. a Vault client requests AWS creds.
+2. Vault creates a new IAM user, attaches the configured IAM policy; for this it uses the engine's `access_key` and `secret_key`.
+3. AWS returns the generated credentails to Vault.
+4. Vault returns the credentials to the client with a TTL
+5. the Vault client connects to AWS and does its thing
+6. Once the TTL expires, Vault revokes the IAM user
+
+#### Assume Role (for Credentials Across _Many Accounts_)
+
+For `Assume Role`, you need to:
+
+1. Provide `access_key` and `secret_key` with which vault as a AWS client 
+
+
+This is the process later on when accessing the engine:
+
+1. A Vault client requests AWS creds
+2. Vault uses a given `access_key` and `secret_key` to connect to AWS-STS. The preconfigured IAM user has a policy that allows it only connect to AWS-STS for a particular role in that target AWS account. That target role is connected to a policy that defines what you can do. There is no additional IAM user being created here.
+3. STS returns the generated credentials to Vault (Access Key, Secret Key, Session Token).
+4. Vault returns the credentials to the Vault client with a TTL
+5. Client then accesses AWS target account, having the target role and the associated policy. 
+6. Once the TLL expires, Vault revokes the temporary credentials.
+
 
 ## Backends
 
@@ -282,9 +349,59 @@ Popular backends are cloud based like S3, Consul and the internal backend, calle
 It can be run stand-alone, in clusters and with multi-cluster setup, where the clusters stay in sync.
 A cluster requires a backend that supports high availability. A cluster has a leader, the rest is standby. You can also have 2 backends, one for the leader-lock (stanza `ha_storage`) and the other for the actual data (stanza `storage`).
 
-Calling a standby gets you redirected to the leader - this means that HA does not increase scalability. Scaling Vault requires scaling the backend, since you always use a single Vault node.
+## Clustering and Replication
 
-More on this here: https://www.vaultproject.io/docs/concepts/ha
+In a basic configuration (using the OSS flavor), a cluster can consist of multiple nodes. There is ever only going to be a single node that processes ALL reads and writes. Increasing performance is done vertically (better hardware), not horizontally (by adding more nodes). Availability is achieved horizontally. The storage backend however must support having multiple nodes. (more here: <https://www.vaultproject.io/docs/concepts/ha>)
+
+> Make sure to put the nodes into different AZs inside a region
+
+There are 3 types of Vault nodes:
+
+* the __Active Node__ is responsible for ALL reads and writes in a basic cluster configuration
+* the __Standby Node__ will forward all requests to the _Active Node_ in a basic cluster configuration. Once an _Active Node_ fails, a _Standby Node_ will take over.
+* the __Performance Standby__ can process read requests, but will forward writes to the active node. __Requires Enterprise License__
+
+Having additional clusters is possible, but requires an __Enterprise License__. It can benefit overall performance and disaster recovery.
+
+### Disaster Recovery Replication
+
+Clustering is supposed to address high availably, meaning the ability to stay available if single nodes fail.
+
+Disaster recovery will help with whole clusters going down, e.g. due to an AZ becoming unavaible. This is achieved with having standby clusters in other AZs or regions. This requires an __Enterprise License__.
+
+DR replication covers this:
+
+* K/V engine state (subject to mount filters)
+* Policies
+* Tokens (service tokens only)
+
+A DR cluster does not receive client requests. Failing over to a DR cluster is done "manually" using outside tooling (load balancer).
+
+Concrete instructions [here](https://www.udemy.com/course/hashicorp-vault/learn/lecture/17166452#overview).
+
+### Performance Replication and Multicloud Access To Secrets
+
+You can set up another cluster in a different cloud or different region to spread secrets and/or increase performance.
+
+Performance replication covers:
+
+* K/V engine state (subject to mount filters)
+* Policies
+
+A performance cluster will answer client READ requests. For this, it will provide its own tokens (and to avoid collisions, tokens from the master cluster are not synced).
+WRITE requests to the secondary will be forwarded to the primary cluster.
+
+### Channels
+
+All communication for Vault utilizes TLS. The following ports are used:
+
+* `tcp/8200` general API and UI port
+* `tcp/8201` server to server communication
+* `tcp/8500` for consul (if used) for client to server com
+* `tcp/udp/8301` for consul (if used) Serf LAN for LAN gossip
+
+![Communication Channels](vault/com.png)
+([source](https://www.udemy.com/course/hashicorp-vault/learn/lecture/17166452#overview))
 
 ## Run Modes
 
