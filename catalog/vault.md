@@ -20,7 +20,7 @@ Compare this to the classic approach of having static credentials, shared betwee
  comes in 3 flavors:
 
 * open source: self hosted, free, dynamic secrets, ACL, key rolling, encryption as a service, aws/azure/gcp auto unseal, local clustering in a single DC (here I'm not sure why this cannot span different DCs)
-* enterprise: self hosted, non-free, all of open source plus disaster recovery, namespaces, replication (aka multi-cluster setups), read-only nodes, HSM auto-unseal, MFA, Sentinel, FIPS 140-2 & Seal Wrap (some gov standard)
+* enterprise: self hosted, non-free, all of open source plus disaster recovery, namespaces (multi tenancy), replication (aka multi-cluster setups), read-only nodes (read secondaries), HSM auto-unseal, MFA, Sentinel (centralized role management), FIPS 140-2 & Seal Wrap (some gov standard)
 * vault on HCP: hosted, non-free, fully managed, scalable, pay by the hour
 
 ## Interacting with Vault
@@ -402,6 +402,31 @@ All communication for Vault utilizes TLS. The following ports are used:
 
 ![Communication Channels](vault/com.png)
 ([source](https://www.udemy.com/course/hashicorp-vault/learn/lecture/17166452#overview))
+
+## Namespaces (Multi Tenancy)
+
+Namespaces are an Enterprise feature and allow for multi-tenancy. Each namespace comes with its own policies, auth methods, secrets engines, tokens, identities. A namespace is like a fresh install - it's completely empty, but it uses shared infrastructure that can be managed centrally.
+
+A token is always only valid in its own namespace, but it's possible to create entities that have access across multiple namespaces.
+
+The namespace is not reflected anywhere in paths or policies. Instead, to "switch" namespaces, you set `VAULT_NAMESPACE=development/productA` and run your usual CLI commands.
+
+### Namespaces are Hierarchical
+Namespaces are hierachical, meaning that you can have a namespace `development` and another NS named `development/productA`. Due to this hierarchy you can even delegate creation of namespaces and the lower level namespaces will not see upper level namespaces. This allows complex setups like:
+
+* global (global infra group, owning infra)
+  * EMEA (local admin group EMEA)
+    * product Europe
+	* product Arabia
+  * NA (local admin group NA)
+    * product USA
+	* product Canada
+
+However considering the bottleneck of always only ever having a single master node doing the write, this probably does not scale like crazy.
+
+### Default Namespace
+
+The default namespace is `root`, however `vault namespace list` will return no results if there is nothing beyond `root`.
 
 ## Run Modes
 

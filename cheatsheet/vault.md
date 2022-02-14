@@ -82,6 +82,12 @@ vault login s.WtBjMPdstV2CEVv28eAQQrrL
 * Add value: `vault kv put secret/database 'password=2hard4u' 'user=dba'`
 * Get value: `vault kv get secret/databse`
 
+## Namespaces (Multi Tenancy)
+
+* `vault namespace create <name>` creates a namespace
+* `vault namespace create -namespace=parentns chilns` creates `childns` under parent `parentns`
+* `vault namespace list`
+* `export VAULT_NAMESPACE=bla; vault login` switch to `bla` namespace and log in, creating a `bla` token
 
 ## Best Practices
 
