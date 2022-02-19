@@ -53,6 +53,23 @@ ZADD users 1975 "John Doe"
 ZADD users 1975 "Jane Jannison"
 ```
 
+### Hash Sets
+
+Hash sets are weird: it's a structure where you set a key and the value is a schemaless object that you can model however you like.
+
+Here is an example with a hash set `user`, in which there is a key `john` that will receive 2 properties: `name` and `email`:
+
+```
+HSET user:john name "John Doe" email "john@example.com" age 25
+HGETALL user:john
+HGET user:john name
+HSET user:john email "bla@example.com"
+HKEYS user:john # just give me the keys
+HVALS user:john # just the values this time
+HINCRBY user:john age 1 # increment the age by 1
+HDEL user:john age # delete the age property
+```
+
 ## redis-cli
 
 The standard cli client is `redis-cli`. A short testdrive:
@@ -62,7 +79,7 @@ docker run --name redis-server --rm -d redis
 docker exec -ti redis-server redis-cli
 ```
 
-## Commands
+## General Commands
 
 * `exists key`
 * `set key value`
@@ -78,3 +95,17 @@ docker exec -ti redis-server redis-cli
 * `setex greeting 30 "Hello"` sets a value and ttl
 * `rename currentkey newkey`
 * `append key ' world'` appends ` world` to key's value
+
+## Persistence Modes
+
+Here you have only a few options: snapshotting at interval or append only logs. More info here: <https://redis.io/topics/persistence>.
+
+### RDB: Redis Database
+
+This performs point-in-time snapshots of the dataset at specified intervals , e.g. "save my data every 10 seconds to disk".
+
+This produces a file (`var/lib/redis/dump.log`) that is easy to back up.
+
+### AOF: Append Only File
+
+This write every operation to disk and replays this when the server starts up again. This produces large AOF files however and it is slower during runtime.
