@@ -22,6 +22,13 @@ Check out the link, it has really good example one liners: <https://kubernetes.i
 * `describe`
 * `attach`: to a running process in some container
 
+### Config
+
+* `kubectl config get-contexts`: what contexts are there?
+* `kubectl config current-context`: what am I using right now?
+* `kubectl config use-context CONTEXT`: switch context
+* `kubectl config set-context --current --namespace NS` switch namespace for current context`
+
 ### Oneliners
 
 * port forwarding
