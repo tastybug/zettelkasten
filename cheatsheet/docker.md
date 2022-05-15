@@ -53,4 +53,4 @@ Show ongoing sessions
 * `docker-compose ps`
 
 Dump or tail logs of an ongoing session
-* `docker-compose logs [-f]
+* `docker-compose logs [-f]`
