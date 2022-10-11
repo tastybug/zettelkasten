@@ -49,3 +49,9 @@
     * $0.05/GB retrieval cost
 
 ![gcp-cloud-store-select-storage-class](./gcp-cloud-storage-select-storage-class.png)
+
+## Filestore
+
+* Support NFS support
+* Scales to hundrets of TB
+* used for VMs and GKE instances
