@@ -47,3 +47,5 @@
   * `archive`; again infrequently accessed, disaster recovery data
     * 365 days minimum data storage
     * $0.05/GB retrieval cost
+
+![gcp-cloud-store-select-storage-class](https://user-images.githubusercontent.com/2163002/195146310-a34d8c0a-e7d9-4acc-9e92-db46b3f74089.png)
