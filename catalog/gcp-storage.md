@@ -51,3 +51,26 @@
 * Supporta NFSv3
 * Scales to hundrets of TB
 * used for VMs and GKE instances
+
+## Cloud SQL (Managed Postgres, Mysql, MSSQL)
+
+* patches are applied automatically
+* users are user managed
+* Availability is unclear, but documented as less than with Cloud Spanner (which is 99,999%)
+* Scalability concerns:
+  * vertically max 64TB of storage
+  * vertically max 60.000 IOPS
+  * vertically max 624GB RAM per instance
+  * horizontally scalable with _read replicas_
+* HA with active/passive nodes with replication being part of the write transaction; failover is managed; both instances are hidden behind a single IP
+* Backup as a service
+* Import/Export possible (unclear if there is tooling beyond what the products bring on their own)
+* Available product versions are:
+  * MySQL versions 5.6, 5.7 or 8.0
+  * Postgres 9.6, 10, 11, 12, 13, 14
+* MSSQL 2017 or 2019
+* Connecting to it: 
+  * internally against the private IP
+  * externally via cloud sql proxy (SSL certificates are managed by Google)
+  * or externally via a manual SSL connection (manual cert rotation) or even unencrypted
+
