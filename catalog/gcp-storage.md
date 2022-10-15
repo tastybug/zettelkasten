@@ -17,15 +17,16 @@
 
 ![Decision Tree](./gcp-storage-decision-tree.png)
 
-## Cloud Storage
+## Cloud Storage (Object Storage, S3 like)
 
 * very fast
+* scales to exabytes
 * HA - depends on storage class, from 99,9% to 99,95%
 * extremely durable: 99,999999999%
-* it's like S3: a bucket for objects
 * no minimum size for objects and buckets; size is limited by the quota
 * buckets cannot be nested and the name is _global_
 * objects can move between buckets
+* objects are encrypted at rest
 * offers fine-grained access control to complete buckets or single objects
   * a maximum of 100 access control lists can exist per bucket
   * an ACL specifies a list of users (can be concrete users, `allUsers` or `allAuthenticatedUsers`) and the permission (`owner`, `writer`, `reader`)
@@ -34,19 +35,14 @@
 * object versioning supported and multipe versions can be retained
 * strongly consistent
 * buckets can be mounted into VMs
-* storage classes:
-  * `standard`; for hot data that is briefly stored
-    * no minimum storage duration
-    * no retrieval cost
-  * `nearline`; infrequently accessed data like backups and multimedia 
-    * 30 days minimum data storage 
-    * 0.01$/GB retrieval cost
-  * `coldline`; infrequently accessed data, read maybe once per quarter
-    * 90d minimum data storage
-    * 0.02$/GB retrieval cost
-  * `archive`; again infrequently accessed, disaster recovery data
-    * 365 days minimum data storage
-    * $0.05/GB retrieval cost
+* pricing depends on the storage class and location (region)
+
+| Storage Class | Use Case | Minimum Storage Duration | Storage Cost | Retrieval Cost |
+|---	|---	|---	|---	|---	|
+| Standard  | Briefly stored data; hot data | None | 0.020$+ | None |
+| Nearline  | Backups, Multimedia | Storage is billed as 30d rest duration | 0.01$+/GB/Month | 0.01$/GB |
+| Coldline  | Infrequently accessed data | Storage is billed as 90d rest duration | 0.004$/GB/Month | 0.02$/GB |
+| Archive   | Long term storage, e.g. for audits | Storage is billed as 365d rest duration | 0.0012$/GB/Month | 0.05$/GB |
 
 ![gcp-cloud-store-select-storage-class](./gcp-cloud-storage-select-storage-class.png)
 
