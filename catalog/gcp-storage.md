@@ -73,4 +73,6 @@
   * internally against the private IP
   * externally via cloud sql proxy (SSL certificates are managed by Google)
   * or externally via a manual SSL connection (manual cert rotation) or even unencrypted
+* High level of control of the hardware setup: amount of cores, amount of disk space, type of storage
+  * storage can be set to auto-increasing, which is a permanent operation
 
