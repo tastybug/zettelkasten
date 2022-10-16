@@ -8,10 +8,11 @@
   * `Filestore`
 * Relational
   * `Cloud SQL`; flavors are MSSQL, Postgres, MySQL
-  * `Cloud Spanner`; hybrid of transactional and analytical db
+  * `Cloud Spanner`; hybrid of transactional and analytical db; petabyte scale, strongly consistent
 * NoSQL / Nonrelational
-  * `Firestore`; hierarchical, mobile, web
-  * `Cloud BigTable`; heavy read and write, events
+  * `Memorystore` (Managed In-Mem Redis) 
+  * `Firestore`; hierarchical, mobile, web, IOT; ACID transactions
+  * `Cloud BigTable`; heavy read and write, events; petabyte scale; sub 10ms latency
 * OLAP
   * `BigQuery`
 
@@ -76,3 +77,55 @@
 * High level of control of the hardware setup: amount of cores, amount of disk space, type of storage
   * storage can be set to auto-increasing, which is a permanent operation
 
+## Cloud Spanner
+
+* Relational DB with extreme horizontal scale
+* up to petabytes of storage
+* strongly consistent
+* high availability (not quantified)
+* monthly uptime 99,99% (regional) - 99,999% (multi-regional)
+* use cases: financial data, inventory data
+  * when single instance RDMS are insufficient
+  * when sharding is already used in the previous database
+  * when transactional consistency is required
+  * when strong consistency is needed
+  * when databases are consolidated
+
+## Firestore
+
+* NoSQL document database
+* live synchronisation
+* security features to determine data access and validation
+* ACID transactions
+* multi-region replication
+* strongly consistent across regions if required (sounds like Mongos write concerns)
+* Firestore is a newer version of GCP Datastore, a previous incarnation of NoSQL at GCP
+* Firestore scales DOWN well (unlike Bigtable)
+* use cases: mobile, IOT, web
+
+## GCP Cloud Bigtable
+
+* NoSQL wide-column database
+* internally it's a giant K/V store, like all other document db systems
+* petabyte-scale
+* strong consistency
+* very fast, consistent sub 10ms latency for reads and writes!
+* seamless scalability
+* compatible with HBase API (apparently an industry standard)
+* Bigtable scales up well (unlike Firestore)
+* it's pretty expensive: 1 node with 1TB is already 630$ per month
+* use cases: 
+  * Ad Tech, Fintech, IOT 
+  * ML applications
+  * hadoop or apache hbase integration
+  * more than 1tb of structured data
+  * very write heavy
+
+## Memorystore (Managed Redis)
+
+* easy lift and shift using the Redis Import/Export feature
+* instances up to 300GB
+* in-memory K/V store
+* sub-millis latency
+* high availability, failover, patching and monitoring
+* 99.9% availability
