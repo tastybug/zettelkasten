@@ -30,10 +30,10 @@ Tags work like labels, but can only be set to VM instances. Tags can be used for
 
 ## Billing
 
-It is possible to create budgets, which is a specified target amount and bind this to one or more _projects_. Once thresholds of that budgets are either reached or projected to be reached, an action can be taken. Available actions on thresholds:
+It is possible to create budgets, which is a specified target amount and bind this to one or more _projects_. Once thresholds of that budgets are either reached or projected to be reached, GCP will:
 
 * send an e-mail
-* write to a pub/sub topic for programmatic consumption ("Programmatic Budgeting")
+* optionally write to a pub/sub topic for programmatic consumption ("Programmatic Budgeting")
 
 It is furthermore possible to export spend data to GBQ, where it can be queried. With the help of labelling of resources, this is a very powerful approach to get insights by running queries.
 
