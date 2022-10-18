@@ -35,6 +35,11 @@ It is possible to create budgets, which is a specified target amount and bind th
 * send an e-mail
 * optionally write to a pub/sub topic for programmatic consumption ("Programmatic Budgeting")
 
-It is furthermore possible to export spend data to GBQ, where it can be queried. With the help of labelling of resources, this is a very powerful approach to get insights by running queries.
+> With Programmatic Budgeting one would be able to alter resources automatically, scale resources down or delete those resources that have a particular labelling configuration. Pretty powerful.
+
+### Slicing and Dicing Spend Data
+
+It is possible to export spend data to GBQ, where it can be queried. With the help of labelling of resources, this is a very powerful approach to get insights by running queries.
+Alternatively, data can be exported as a file (CSV, JSON) into a storage bucket.
 
 Furthermore, Google Data Studio can be used to visualize spend data and to allow data to be sliced and diced.
