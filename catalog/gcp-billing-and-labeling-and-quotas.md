@@ -1,4 +1,4 @@
-# GCP Billing and Quotas
+# GCP Billing, Quotas and Labels
 
 ## What are Resources?
 
@@ -30,4 +30,11 @@ Tags work like labels, but can only be set to VM instances. Tags can be used for
 
 ## Billing
 
-to be written
+It is possible to create budgets, which is a specified target amount and bind this to one or more _projects_. Once thresholds of that budgets are either reached or projected to be reached, an action can be taken. Available actions on thresholds:
+
+* send an e-mail
+* write to a pub/sub topic for programmatic consumption ("Programmatic Budgeting")
+
+It is furthermore possible to export spend data to GBQ, where it can be queried. With the help of labelling of resources, this is a very powerful approach to get insights by running queries.
+
+Furthermore, Google Data Studio can be used to visualize spend data and to allow data to be sliced and diced.
