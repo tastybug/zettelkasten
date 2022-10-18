@@ -12,3 +12,15 @@ Quotas are also a project level mechanism. They control:
 Quotas can be altered using the Cloud Console or via a support ticket.
 
 > Quotas prevent runaway costs, malicious attacks, billing surprises and force users to consider sizing
+
+## Labels
+
+Can be attached to any resource: VMs, disks, snapshots, images, SQL servers and so on. Use it to tag resources to filter, attribution (cost center, ownership, environment, state, ..) and run bulk operations on multiple resources.
+
+__Labels propagate through billing!__
+
+> There is a limit of 64 labels per resource.
+
+### How Tags Differ from Labels
+
+Tags work like labels, but can only be set to VM instances. Tags can be used for firewalling rules to select what instance can do what.
