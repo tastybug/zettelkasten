@@ -37,9 +37,10 @@ It is possible to create budgets, which is a specified target amount and bind th
 
 > With Programmatic Budgeting one would be able to alter resources automatically, scale resources down or delete those resources that have a particular labelling configuration. Pretty powerful.
 
+Costs belong to categories, like "Internet Egree from America to China".
+
 ### Slicing and Dicing Spend Data
 
-It is possible to export spend data to GBQ, where it can be queried. With the help of labelling of resources, this is a very powerful approach to get insights by running queries.
-Alternatively, data can be exported as a file (CSV, JSON) into a storage bucket.
+It is possible to export spend data to GBQ, where it can be queried. With the help of labeled resources PLUS the fact that costs are categorized, this is a very powerful approach to get insights by running queries. Using simple queries one can find cost drivers per resource or category.
 
 Furthermore, Google Data Studio can be used to visualize spend data and to allow data to be sliced and diced.
