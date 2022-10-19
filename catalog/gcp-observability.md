@@ -15,9 +15,15 @@ Overall Properties:
 * open source agents
 * extendible with 3rd party software
 
-## Monitoring
+## Monitoring aka Cloud Monitoring fka Stackdriver Monitoring
 
 This encompasses platform, system and application metrics and the visualization of those. Alerting pushes notification to you if things get out of hand.
 
-Sources: Metrics, Events, Metadata
+Sources: Metrics, Events, Metadata, Uptime Checks (Appengine Instance, VM, HTTP/HTTPS URL, AWS Instance or Loadbalancer)
 Sinks: Alerts, Dashboards, Charts
+
+> VM instances require a monitoring agent to report data. This can be done as part of the startup script by running 2 lines of script.
+
+### Metric Scope
+
+FIND OUT WHAT THAT IS
