@@ -26,4 +26,5 @@ Sinks: Alerts, Dashboards, Charts
 
 ### Metric Scope
 
-FIND OUT WHAT THAT IS
+When you open the Monitoring Product Page, it will tell you yhe Metrics Scope. This defines which GCP projects Monitoring is able to monitor.
+In principle it seems to be possible to have a dedicated monitoring project that sees all other projects and monitors what is going on.
