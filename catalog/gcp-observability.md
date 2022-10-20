@@ -28,3 +28,8 @@ Sinks: Alerts, Dashboards, Charts
 
 When you open the Monitoring Product Page, it will tell you yhe Metrics Scope. This defines which GCP projects Monitoring is able to monitor.
 In principle it seems to be possible to have a dedicated monitoring project that sees all other projects and monitors what is going on.
+
+### Uptime Checks
+
+This is a pretty convenient category in the Monitoring product that allows you to see if resources are healthy. There a ton of options on how to check it.
+Uptime checks are run from multiple continents: Asia Pacific, Europe and both Americas.
