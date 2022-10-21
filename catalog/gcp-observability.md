@@ -33,3 +33,44 @@ In principle it seems to be possible to have a dedicated monitoring project that
 
 This is a pretty convenient category in the Monitoring product that allows you to see if resources are healthy. There a ton of options on how to check it.
 Uptime checks are run from multiple continents: Asia Pacific, Europe and both Americas.
+
+### Logging
+
+* log retention is 30d, but it can be exported to pub/sub, cloud storage or GBQ
+* it's possible to have alerts on logging
+* for VMs there is a "logging agent", that has to be installed
+
+### Error Reporting
+
+This SEEMS (didn't check) to collect errors from a variety of data sources, allowing you to create dashboards and notifications.
+
+Data sources mentioned are:
+* App Engine
+* Apps Script
+* Compute Engine
+* Cloud Functions
+* Cloud Run
+* GKE
+* EC2
+
+Supported languages are: Go, Java, .NET, Node.js, PHP, Python, Ruby
+
+### Tracing
+
+Distributed tracing system. Allows real time view of:
+
+* per URL latency samping
+* latency reporting
+
+Data sources:
+* App Engine
+* HTTP(S) load balancers
+* applications instrumented with the cloud trace SDK
+
+### Debugging
+
+Allows debugging without stopping or slowing down the application. Allows:
+* inject logging without stopping
+* capture snapshot of stack
+
+Supported languages: Java, Pythin, Go, Node.js, Ruby, PHP and .NET Core
