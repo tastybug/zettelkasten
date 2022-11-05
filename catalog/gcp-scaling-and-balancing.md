@@ -23,4 +23,10 @@ This is a classic managed reverse proxy.
 * The proxy autoscales and requires no prewarming
 * configuration supports URL maps to point to particular instances based on URLs
 * VMs are meant to be healthy to receive traffic
-* 
+* HTTPs balancer supports up to 15 certificates
+* HTTPs balancer terminates the SSL session at the balancer
+
+### Using Cloud Storage behind Load Balancers
+
+Thanks to URL mapping, it's possible to serve bucket content via a HTTPs balancer.
+Example: `/fetch-that-picture/bla.png` can be configured as `/fetch-that-picture/` -> bucket `pic-bucket` in `europe-north-1`.
