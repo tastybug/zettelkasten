@@ -12,7 +12,7 @@ This is for VMs. It mirrors the ReplicaSet of K8S.
 * can be zonal or regional
 * VMs are expected to support health checks with similar behavious like those in K8s
 
-## HTTP(s) Load Balancing (Service for VMs)
+## HTTP(s) GLOBAL, external Load Balancing (Service for VMs)
 
 This is a classic managed reverse proxy.
 
@@ -24,8 +24,9 @@ This is a classic managed reverse proxy.
 * configuration supports URL maps to point to particular instances based on URLs
 * VMs are meant to be healthy to receive traffic
 * HTTPs LB supports up to 15 certificates
-* HTTPs LB can take care of certificate management, SSL policies and security patching (not sure what that means) 
+* HTTPs LB can take care of certificate management, SSL policies and security patching for known vulnerabilities in the network stack 
 * HTTPs LB terminates the SSL session at the balancer
+* TCP LB offer the same routing like HTTP(s) LBs and support security patching
 
 ### Using Cloud Storage behind Load Balancers
 
@@ -41,3 +42,13 @@ The caching strategy has to be set:
 * depends on origin headers (caching headers from the backend): `USE_ORIGIN_HEADERS`
 * cache everything static (I cannot tell how it figure out what's static): `CACHE_ALL_STATIC`
 * put everything into CDN: `FORCE_CACHE_ALL`
+
+## Network Load Balancing: the REGIONAL, external balancer
+
+A regional, non-proxied load balancer (meaning connections don't terminate at the LB).
+Forwarding rules are based on IP protocol data (address, port). It supports UDP, TCP and SSL traffic on non-standard ports.
+
+## Internal Load Balancing: the REGIONAL, internal balancer
+
+A regional, private load balancer for VM instances. Supports TCP and UDP traffic.
+This is also a non-proxying LB, meaning connections don't terminate at the LB.
