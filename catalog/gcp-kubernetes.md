@@ -33,3 +33,6 @@ Apparently the migratation source can be manifold:
 * Azure
 * AWS
 * On Premise VMWare
+
+The "processor" of this migration is a "GKE processing cluster" running a migration tools. The output goes into 2 places: Cloud Storage will contain the YAML and Dockerfiles and a target GKE cluster (NOT the processing cluster) will be running the pods with the migrated containers.
+Once the migration is done, the processing cluster can be deleted.
