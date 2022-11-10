@@ -24,3 +24,12 @@ This is pretty complex and comes down to the number of nodes and commitment. Con
 >The cluster management fee of $0.10 per cluster per hour (charged in 1 second increments) applies to all GKE clusters irrespective of the mode of operation, cluster size or topology.
 
 The free tier gives you currently enough credit to make the control plane of a single cluster free.
+
+## Anthos
+
+Anthos is described as a migration tool that turns an existing VM landscape into a K8s setup. It is described as automatically creating containers from existing VMs and then deploying those contains into a ready GKE cluster.
+Apparently the migratation source can be manifold: 
+* GCP Cloud Compute
+* Azure
+* AWS
+* On Premise VMWare
