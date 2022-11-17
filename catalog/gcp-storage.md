@@ -21,6 +21,7 @@
 ## Cloud Storage (Object Storage, S3 like)
 
 * very fast
+* Strongly consistent
 * scales to exabytes
 * HA - depends on storage class, from 99,9% to 99,95%
 * extremely durable: 99,999999999%
@@ -56,6 +57,7 @@
 ## Cloud SQL (Managed Postgres, Mysql, MSSQL)
 
 * patches are applied automatically
+* strongly consistent
 * users are user managed
 * Availability is unclear, but documented as less than with Cloud Spanner (which is 99,999%)
 * Scalability concerns:
@@ -108,7 +110,7 @@
 * NoSQL wide-column database
 * internally it's a giant K/V store, like all other document db systems
 * petabyte-scale
-* strong consistency
+* strong consistency (another module says it's eventual consistent)
 * very fast, consistent sub 10ms latency for reads and writes!
 * seamless scalability
 * compatible with HBase API (apparently an industry standard)
@@ -127,5 +129,6 @@
 * instances up to 300GB
 * in-memory K/V store
 * sub-millis latency
+* eventual consistent
 * high availability, failover, patching and monitoring
 * 99.9% availability
