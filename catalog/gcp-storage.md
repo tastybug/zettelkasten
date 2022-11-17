@@ -1,5 +1,7 @@
 # GCP Storage Options
 
+![gcp-storage-options-and-properties.png](gcp-storage-options-and-properties.png)
+
 ## Catalog Tree
 
 * Object Store (binary and object data)
