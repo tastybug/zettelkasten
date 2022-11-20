@@ -52,7 +52,7 @@
 
 ## Filestore
 
-* Supporta NFSv3
+* Supports NFSv3
 * Scales to hundrets of TB
 * used for VMs and GKE instances
 
