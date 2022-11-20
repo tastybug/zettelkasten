@@ -53,8 +53,8 @@ Forwarding rules are based on IP protocol data (address, port). It supports UDP,
 A regional, private load balancer for VM instances. Supports TCP and UDP traffic.
 This is also a non-proxying LB, meaning connections don't terminate at the LB.
 
-![LB Summary](./gcp-lb-summary.png)
+![LB Summary](./pics/gcp-lb-summary.png)
 
-![Choosing the right LB](choosing-gcp-loadbalancer.png)
+![Choosing the right LB](./pics/choosing-gcp-loadbalancer.png)
 
-![LB overview](gcp-loadbalancers-overview.png)
+![LB overview](./pics/gcp-loadbalancers-overview.png)

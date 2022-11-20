@@ -2,7 +2,7 @@
 
 There are a number of options to run an application on GCP.
 
-![choosing application platform](gcp-choosing-a-deployment-type.png)
+![choosing application platform](./pics/gcp-choosing-a-deployment-type.png)
 
 ## VM based (Cloud Compute)
 
@@ -44,7 +44,7 @@ This is a bit weird: each GCP project can contain a single App Engine applicatio
 
 An application is a logical frame around a number of services (concrete applications in a supported language like Java, Go, Node, PHP, Py, Ruby), allowing those services to talk to each other. A service can exist in multiple versions and at the version level, the service instance is available.
 
-![app engine model](gcp-app-engine-application-model.png)
+![app engine model](./pics/gcp-app-engine-application-model.png)
 
 You start with a given application and add a `app.yaml` file with metadata to it, helping App Engine to understand it.
 

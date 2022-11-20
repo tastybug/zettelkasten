@@ -1,6 +1,6 @@
 # GCP Storage Options
 
-![gcp-storage-options-and-properties.png](gcp-storage-options-and-properties.png)
+![gcp-storage-options-and-properties.png](./pics/gcp-storage-options-and-properties.png)
 
 ## Catalog Tree
 
@@ -18,7 +18,7 @@
 * OLAP
   * `BigQuery`
 
-![Decision Tree](./gcp-storage-decision-tree.png)
+![Decision Tree](./pics/gcp-storage-decision-tree.png)
 
 ## Cloud Storage (Object Storage, S3 like)
 
@@ -48,7 +48,7 @@
 | Coldline  | Infrequently accessed data | Storage is billed as 90d rest duration | 0.004$/GB/Month | 0.02$/GB |
 | Archive   | Long term storage, e.g. for audits | Storage is billed as 365d rest duration | 0.0012$/GB/Month | 0.05$/GB |
 
-![gcp-cloud-store-select-storage-class](./gcp-cloud-storage-select-storage-class.png)
+![gcp-cloud-store-select-storage-class](./pics/gcp-cloud-storage-select-storage-class.png)
 
 ## Filestore
 
