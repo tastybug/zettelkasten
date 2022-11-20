@@ -56,3 +56,5 @@ This is also a non-proxying LB, meaning connections don't terminate at the LB.
 ![LB Summary](./gcp-lb-summary.png)
 
 ![Choosing the right LB](choosing-gcp-loadbalancer.png)
+
+![LB overview](gcp-loadbalancers-overview.png)
