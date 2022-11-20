@@ -20,7 +20,7 @@ How do you update this?
 
 ## Not Containerized: Cloud Function
 
-### Cloud Functions
+### Cloud Functions (Event Driven!)
 
 What is your deliverable? How to update it?
 
