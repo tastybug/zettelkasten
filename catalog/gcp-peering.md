@@ -14,6 +14,8 @@ HA VPN is a flavor of this with an SLA of 99,99%.
 
 > Expected throughput is 1.5 - 3 Gbps per tunnel
 
+![classic vpn topology](gcp-classic-vpn-topology.png)
+
 ## Layer 2, Option 2: VPC Peering between different GCP VPCs
 
 You have different VPCs, possibly belonging to different GCP organizations.
