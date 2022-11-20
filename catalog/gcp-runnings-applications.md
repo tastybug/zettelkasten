@@ -45,9 +45,12 @@ TODO:
 
 This is a bit weird: each GCP project can contain a single App Engine application. 
 
-An application is WHAT? An application contains 1 or more services, which itself have 1 or more versions.
+An application is a logical frame around a number of services (concrete applications in a supported language like Java, Go, Node, PHP, Py, Ruby), allowing those services to talk to each other. A service can exist in multiple versions and at the version level, the service instance is available.
 
-TODO:
-* What is your deliverable? 
-* delivery
-* scaling
+![app engine model](gcp-app-engine-application-model.png)
+
+You start with a given application and add a `app.yaml` file with metadata to it, helping App Engine to understand it.
+
+Service delivery can be done with `gcloud app deploy --version=one --quiet`. Once deployed, it is available under this URL scheme: `https://VERSION-dot-SERVICE-dot-PROJECT_ID.REGION_ID.r.appspot.com`. (Note: region_id is not same as region name. `uc` is for example the id for `us-central`).
+
+Scaling is described as "automated".
