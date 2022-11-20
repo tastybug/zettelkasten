@@ -14,18 +14,15 @@ You run your own VM, the rest is up to you. It's possible to specify a VM to run
 
 You're the admin of a GKE cluster. You decide the region, number of nodes and so on.
 
-### Cloud Run
+### Cloud Run (It's like helm)
 
-This option allows you to run a given container image (it must be present in GCP Container Registry they say) in a managed GKE cluster.
-So almost as GKE, but no administrative worries.
+This option allows you to run a given container image (it must be present in GCP Container Registry!) in a managed GKE cluster or even one of the GKE clusters that the org owns. So almost like GKE, but no administrative worries.
 
 > The application must be stateless!
 
-You pick a region for your image.
+You pick a region for your image. You decide on elasticity by selected a runtime environment, amount of RAM, max burst amount of instances and so on. Once the container deployed, it is available under a URL like <https://hello-cloud-run-oxxok2hixa-uc.a.run.app>.
 
-TODO:
-* scaling?
-* delivery? rolling updates?
+A CD pipeline can be setup as well but binding a Cloud Build setup to the Cloud Run setup. This will build containers from a source repository, adding them to the GCR - the container registry.
 
 ## Non-Containerized Application
 
