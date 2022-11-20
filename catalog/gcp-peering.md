@@ -10,7 +10,7 @@ Broadly speaking you might have the following challenges:
 
 This is realistic for low-ish data volume. VPN SLA is given as 99,9%.
 
-HA VPN is a flavor of this with an SLA of 99,99%.
+HA VPN is a 2-tunnel flavor of this with an SLA of 99,99%.
 
 > Expected throughput is 1.5 - 3 Gbps per tunnel
 
