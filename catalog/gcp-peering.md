@@ -14,14 +14,19 @@ HA VPN is a flavor of this with an SLA of 99,99%.
 
 > Expected throughput is 1.5 - 3 Gbps per tunnel
 
-## Layer 2, Option 2: Cloud Interconnect
+## Layer 2, Option 2: VPC Peering between different GCP VPCs
+
+You have different VPCs, possibly belonging to different GCP organizations.
+The subnet range must not overlap in this case.
+
+## Layer 2, Option 3: Cloud Interconnect
 
 This achieves the same result as a VPN, but allows for more throughput due to a physical connection. It requires co-location of at least the router of the customer in one of the supported data centers (they are spread all around the world).
 SLA is given as 99,9% up to 99,99%.
 
 > Expected throughout 10 Gbps (100 Gbps in beta) per link
 
-## Layer 2, Option 3: Partner Interconnect
+## Layer 2, Option 4: Partner Interconnect
 
 If `Cloud Interconnect` is unrealistic, peering via a service provider is possible (they might be closer to your physical location). This likely means shared infrastructure in between GCP and the onprem network and thus lower throughput.
 
