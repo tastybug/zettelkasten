@@ -2,75 +2,105 @@
 
 Monitoring, Logging and instrumentation is all available under `GCP Operations Suite` (fka Stackdriver).
 
-Parts:
-* Monitoring
-* Logging
-* Error Reporting
-* Tracing
-* Debugging
-
 Overall Properties:
 * Manages across platforms: AWS, GCP
 * dynamic discovery of resources in GCP
 * open source agents
 * extendible with 3rd party software
 
-## Monitoring aka Cloud Monitoring fka Stackdriver Monitoring
+There are 2 categories here:
 
-This encompasses platform, system and application metrics and the visualization of those. Alerting pushes notification to you if things get out of hand.
+* Operations-based tools, which aim at admins overseeing the platform
+* Applicartion performance management tools for developers, allowing drilldown into an application stack
 
-Sources: Metrics, Events, Metadata, Uptime Checks (Appengine Instance, VM, HTTP/HTTPS URL, AWS Instance or Loadbalancer)
-Sinks: Alerts, Dashboards, Charts
+To have good observability (which enables TROUBLESHOOTING), you need 3 things:
 
-> VM instances require a monitoring agent to report data. This can be done as part of the startup script by running 2 lines of script.
+* signals: 
+  * metrics from apps, services, platform
+  * logs from apps, services and platform
+  * traces from apps
+* incident management techniques:
+  * alerts
+  * error reporting
+  * SLOs
+* visualization and analytics:
+  * dashboards
+  * metrics explorer
+  * logs explorer
+  * service monitoring
+  * health checks
+  * debugger profiler   
 
-### Metric Scope
+## Operations-Based Tools
 
-When you open the Monitoring Product Page, it will tell you yhe Metrics Scope. This defines which GCP projects Monitoring is able to monitor.
-In principle it seems to be possible to have a dedicated monitoring project that sees all other projects and monitors what is going on.
+### Monitoring
+Monitoring is about visualizing data.
 
-### Uptime Checks
+Monitoring is automatically connected to a variety of signals: it's getting logs from GBQ about usage, from Cloud Run about CPU utilization, 
+billable time and so on. From Cloud Compute, it gets CPU and memory utilization, disk throughput and more.
 
-This is a pretty convenient category in the Monitoring product that allows you to see if resources are healthy. There a ton of options on how to check it.
-Uptime checks are run from multiple continents: Asia Pacific, Europe and both Americas.
+Applications can provide logs via OpenTelemetry custom metrics.
 
 ### Logging
+Logging is about collecting, analysing and exporting (incl. retaining) log messages.
 
-* log retention is 30d, but it can be exported to pub/sub, cloud storage or GBQ
-* it's possible to have alerts on logging
-* for VMs there is a "logging agent", that has to be installed
+- It collects from automatically from App Engine, Cloud Run, GKE and VMs. Logs are organized by project.
+- Analyzes log data with Logs Explorer, via Pub/Sub, Dataflow and GBQ. You can also analyze archived logs from Cloud Storage.
+- Exporting to Cloud Storage, Pub/Sub and GBQ. Logs-based metrics can be exported to `Monitoring`
+- Retention of data access logs is 1-3650 days (30d default), admin logs for 400 days. With Cloud Storage and GBQ, this can be even longer.
+
+There are 3 categories of logs:
+- cloud audit logs
+  - "Who did what, when, where?"
+  - admin activity
+  - data access
+  - systems events
+  - access transparency (for when there is a Google employee doing manual intervention)
+- agent logs
+  - fluentd agent (a locally running log collection agent) for VMs and containers
+  - common third-party applications
+  - system software
+  - apps calling the Cloud Logging API (there's libs for that)
+- network logs
+  - vpc flow
+  - firewall rules
+  - NAT gateway
+  - load balancers
 
 ### Error Reporting
+Counts, analyzes and aggregates crashes in running cloud services (e.g. GKE). You can filter.
+It's possible to get notifications on new errors.
 
-This SEEMS (didn't check) to collect errors from a variety of data sources, allowing you to create dashboards and notifications.
+You see here:
+- stack traces
+- number of occurrences
+- first and last seen
+- number of affected users
 
-Data sources mentioned are:
-* App Engine
-* Apps Script
-* Compute Engine
-* Cloud Functions
-* Cloud Run
-* GKE
-* EC2
+### Service Monitoring
+Understand and troubleshoot intra-service dependencies. Supports App Engine, Anthos Service Mesh and Istio.
+You can create SLOs on errors here and see the remaining budget.
 
-Supported languages are: Go, Java, .NET, Node.js, PHP, Python, Ruby
+## Application Performance Management Tools
 
-### Tracing
+### Debugger
+Debug running code. Debug sessions can be shared.
+Debug using snapshots, logpoints, conditional debugging.
 
-Distributed tracing system. Allows real time view of:
+This is integrated with popular IDEs.
 
-* per URL latency samping
-* latency reporting
+Debugger can be connected to various SCMs (Github, Bitbucket, Cloud Source, Gitlab) to understand versioning.
 
-Data sources:
-* App Engine
-* HTTP(S) load balancers
-* applications instrumented with the cloud trace SDK
+### Tracer
 
-### Debugging
+See latency of calls to an application in near-real-time. This breaks down what happens in the application.
+If the application calls others, even in other projects, this will be part of the visualization and break down.
 
-Allows debugging without stopping or slowing down the application. Allows:
-* inject logging without stopping
-* capture snapshot of stack
+Supports App Engine, Compute Engine and GKE.
 
-Supported languages: Java, Pythin, Go, Node.js, Ruby, PHP and .NET Core
+### Profiler
+
+Helps to improve performance and reduce costs using low-impact cpu usage and heap profiling.
+You'll see a heat map of your call stack and how long everything takes.
+
+Supports VMs, App Engine, Compute Engine and GKE with Java, Go, Python and NodeJS.
