@@ -41,6 +41,9 @@ billable time and so on. From Cloud Compute, it gets CPU and memory utilization,
 
 Applications can provide logs via OpenTelemetry custom metrics.
 
+Monitoring is bound to a particular GCP project. It is possible to have Monitoring in 1 particular project spanning across multiple other projects (I guess must be in the same org).
+A common setup is to have a "devops" project with Monitoring covering resources from projects covering stages: `project dev`, `project qa` and `project prod`. This allows a holistic view across all stages in a single pane of glass.
+
 ### Logging
 Logging is about collecting, analysing and exporting (incl. retaining) log messages.
 
