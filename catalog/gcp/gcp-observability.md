@@ -34,15 +34,24 @@ To have good observability (which enables TROUBLESHOOTING), you need 3 things:
 ## Operations-Based Tools
 
 ### Monitoring
-Monitoring is about visualizing data.
+Monitoring is about visualizing data, using metrics from a variety of signal sources. It is automatically connected to a variety of signals: it's getting logs from GBQ about usage, from Cloud Run about CPU utilization,  billable time and so on. From Cloud Compute, it gets CPU and memory utilization, disk throughput and more.
 
-Monitoring is automatically connected to a variety of signals: it's getting logs from GBQ about usage, from Cloud Run about CPU utilization, 
-billable time and so on. From Cloud Compute, it gets CPU and memory utilization, disk throughput and more.
-
-Applications can provide logs via OpenTelemetry custom metrics.
+> Applications can additionally provide logs via OpenTelemetry custom metrics.
 
 Monitoring is bound to a particular GCP project. It is possible to have Monitoring in 1 particular project spanning across multiple other projects (I guess must be in the same org).
 A common setup is to have a "devops" project with Monitoring covering resources from projects covering stages: `project dev`, `project qa` and `project prod`. This allows a holistic view across all stages in a single pane of glass.
+
+#### Uptime Checks: a simple way to check that some site or resource is up
+
+Uptime checks are a special and simple kind of monitoring tool. It's meant to check the availability of a resource from a configurable range of places around the world.
+
+An uptime check is based on HTTP, HTTPS or TCP. The resource under check can be:
+* an App Engine application
+* a Compute Engine VM
+* a URL
+* an AWS instance or load balancer
+
+You can specify latency thresholds and alerting.
 
 ### Logging
 Logging is about collecting, analysing and exporting (incl. retaining) log messages.
