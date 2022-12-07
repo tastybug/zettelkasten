@@ -41,6 +41,16 @@ Applications can provide custom metrics via OpenTelemetry.
 Monitoring is bound to a particular GCP project. It is possible to have Monitoring in 1 particular project spanning across multiple other projects (I guess must be in the same org).
 A common setup is to have a "devops" project with Monitoring covering resources from projects covering stages: `project dev`, `project qa` and `project prod`. This allows a holistic view across all stages in a single pane of glass.
 
+#### How Logging is Done in VMs
+
+VMs use locally logging agents (OSS: `fluentd`) to collect system metrics, logs and such. Due to the agent being open, there is a variety of plugins to observe standard tools like Jenkins/Puppet/Chef, Apache/Tomcat/Nginx, Cassandra/MongoDB/MySQL.
+Custom configuration for `fluentd` can be provided too.
+
+This agent supports various Linux distros and Windows. It is possible to create custom images and add the Google Logging Agent there.
+
+The agent is not meant for App Engine, GKE nodes, Cloud Run, Cloud Functions and Anthos GKE. They come with build-in agents.
+The agent requires an IAM service account though, which needs to contain the permissions `Log Writer` and optionally `Monitoring Metric Writer`.
+
 #### Uptime Checks: a simple way to check that some site or resource is up
 
 Uptime checks are a special and simple kind of monitoring tool. It's meant to check the availability of a resource from a configurable range of places around the world.
