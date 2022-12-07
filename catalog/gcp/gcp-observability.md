@@ -11,7 +11,7 @@ Overall Properties:
 There are 2 categories here:
 
 * Operations-based tools, which aim at admins overseeing the platform
-* Applicartion performance management tools for developers, allowing drilldown into an application stack
+* Application performance management tools for developers, allowing drilldown into an application stack
 
 To have good observability (which enables TROUBLESHOOTING), you need 3 things:
 
@@ -36,7 +36,7 @@ To have good observability (which enables TROUBLESHOOTING), you need 3 things:
 ### Monitoring
 Monitoring is about visualizing data, using metrics from a variety of signal sources. It is automatically connected to a variety of signals: it's getting logs from GBQ about usage, from Cloud Run about CPU utilization,  billable time and so on. From Cloud Compute, it gets CPU and memory utilization, disk throughput and more.
 
-> Applications can additionally provide logs via OpenTelemetry custom metrics.
+Applications can provide custom metrics via OpenTelemetry.
 
 Monitoring is bound to a particular GCP project. It is possible to have Monitoring in 1 particular project spanning across multiple other projects (I guess must be in the same org).
 A common setup is to have a "devops" project with Monitoring covering resources from projects covering stages: `project dev`, `project qa` and `project prod`. This allows a holistic view across all stages in a single pane of glass.
