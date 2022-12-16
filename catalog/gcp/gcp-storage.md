@@ -116,6 +116,7 @@
 
 * NoSQL wide-column database
 * internally it's a giant K/V store, like all other document db systems
+* you only get a single index: the one on the key
 * petabyte-scale
 * strong consistency (another module says it's eventual consistent)
 * very fast, consistent sub 10ms latency for reads and writes!
