@@ -31,6 +31,10 @@
 * buckets cannot be nested and the name is _global_
 * objects can move between buckets
 * objects are encrypted at rest
+* a bucket can be
+  * multi-regional (you pick europe, asia, north-america and it will spread the data across some concrete regions)
+  * dual-region: you pick 2 concrete regions 
+  * single region: it's kept in one region that you can select
 * offers fine-grained access control to complete buckets or single objects
   * a maximum of 100 access control lists can exist per bucket
   * an ACL specifies a list of users (can be concrete users, `allUsers` or `allAuthenticatedUsers`) and the permission (`owner`, `writer`, `reader`)
@@ -104,8 +108,9 @@
 * multi-region replication
 * strongly consistent across regions if required (sounds like Mongos write concerns)
 * Firestore is a newer version of GCP Datastore, a previous incarnation of NoSQL at GCP
-* Firestore scales DOWN well (unlike Bigtable)
+* Firestore scales DOWN well (unlike Bigtable, Cloud SQL)
 * use cases: mobile, IOT, web
+* 1GB per instance is free
 
 ## GCP Cloud Bigtable
 
