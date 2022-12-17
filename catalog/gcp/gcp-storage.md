@@ -95,6 +95,7 @@
 * high availability (not quantified)
 * this scales automatically and horizontally, transparently handling sharding, replication and transactions
 * monthly uptime 99,99% (regional) - 99,999% (multi-regional)
+* there is a given set of "region-configurations" that one can pick from; some are continental, some span the whole world
 * managed backup / restore
 * use cases: financial data, inventory data
   * when single instance RDMS are insufficient
