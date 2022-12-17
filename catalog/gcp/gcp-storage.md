@@ -90,9 +90,12 @@
 
 * Relational DB with extreme horizontal scale
 * up to petabytes of storage
-* strongly consistent
+* strongly consistent across multiple regions (question here is ofc how fast this is)
+* no maintenance windows, no downtimes
 * high availability (not quantified)
+* this scales automatically and horizontally, transparently handling sharding, replication and transactions
 * monthly uptime 99,99% (regional) - 99,999% (multi-regional)
+* managed backup / restore
 * use cases: financial data, inventory data
   * when single instance RDMS are insufficient
   * when sharding is already used in the previous database
