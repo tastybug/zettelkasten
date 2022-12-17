@@ -63,7 +63,7 @@
 ## Cloud SQL (Managed Postgres, Mysql, MSSQL)
 
 * patches are applied automatically
-* regional only regional, but read replicas can be in different regions
+* regional only but read replicas can be in different regions
 * strongly consistent
 * users are user managed
 * Availability is unclear, but documented as less than with Cloud Spanner (which is 99,999%)
@@ -72,7 +72,7 @@
   * vertically max 60.000 IOPS
   * vertically max 624GB RAM per instance
   * horizontally scalable with _read replicas_
-* HA with active/passive nodes with replication being part of the write transaction; failover is managed; both instances are hidden behind a single IP
+* HA with active/passive nodes in different zones with replication being part of the write transaction; failover is managed; both instances are hidden behind a single IP
 * Backup as a service
 * Import/Export possible (unclear if there is tooling beyond what the products bring on their own)
 * Available product versions are:
