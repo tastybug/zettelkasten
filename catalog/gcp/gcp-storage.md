@@ -104,13 +104,15 @@
   * when strong consistency is needed
   * when databases are consolidated
 
-## Firestore
+## Firestore (feels a lot like MongoDB)
 
 * NoSQL document database
 * live synchronisation
 * security features to determine data access and validation
 * ACID transactions
 * can be single or multi region (you select a continent) - this can't be changed later on
+  * multi-region is more expensive, slower on writes and 99.99% SLA-ed
+  * single region is faster, cheaper and 99.99% SLA-ed 
 * strongly consistent across regions if required (sounds like Mongos write concerns)
 * Firestore is a newer version of GCP Datastore, a previous incarnation of NoSQL at GCP
 * Firestore scales DOWN well (unlike Bigtable, Cloud SQL)
