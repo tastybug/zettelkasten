@@ -110,12 +110,16 @@
 * live synchronisation
 * security features to determine data access and validation
 * ACID transactions
-* multi-region replication
+* can be single or multi region (you select a continent) - this can't be changed later on
 * strongly consistent across regions if required (sounds like Mongos write concerns)
 * Firestore is a newer version of GCP Datastore, a previous incarnation of NoSQL at GCP
 * Firestore scales DOWN well (unlike Bigtable, Cloud SQL)
 * use cases: mobile, IOT, web
 * 1GB per instance is free
+* SLA is 99.999 if multi region, 99.99% in single region mode
+* Indexing across multiple fields is possible
+* There is 1 Firestore per project and (funny) it can't be deleted once created
+* data TTL can be configured
 
 ## GCP Cloud Bigtable
 
