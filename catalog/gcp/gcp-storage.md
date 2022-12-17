@@ -63,6 +63,7 @@
 ## Cloud SQL (Managed Postgres, Mysql, MSSQL)
 
 * patches are applied automatically
+* regional only regional, but read replicas can be in different regions
 * strongly consistent
 * users are user managed
 * Availability is unclear, but documented as less than with Cloud Spanner (which is 99,999%)
