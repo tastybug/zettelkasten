@@ -31,7 +31,12 @@ A permission describes what can be done on a particular resource. It's identifie
 
 ## Resources
 
-Cloud resources are the various services that GCP offers, like buckets, databases, VMs.
+Cloud resources are the various GCP services (Cloud Storage, Cloud SQL) and INSTANCES of those services.
+Examples:
+* a concrete bucket
+* a concrete object in a bucket
+* all buckets in a project
+* all VMs in a project
 
 ## Roles
 
@@ -56,7 +61,11 @@ Policies bring the concepts together and form the basis of IAM. You have 3 ingre
 
 * the principal
 * the role(s)
-* optional metadata to make it more fine grained (only at certain times, on objects but not buckets etc.)
+* optional metadata to make it more fine grained: 
+  * time constraints: only until X, only on weekdays?
+  * is it the service itself, like Cloud Storage?
+  * Is it only concrete buckets, certain VMs with certain tags?
+  * and so on
 
 ### Deny Policies
 
