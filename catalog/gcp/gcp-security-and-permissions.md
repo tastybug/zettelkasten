@@ -7,6 +7,9 @@ CIA of Security:
 
 # IAM
 
+Identity and access management deals with the question of who is allowed to do what.
+You assign principals to roles, which gives you a policy.
+
 ## Principals
 
 IAM supports a variety of principals and means of identity management:
@@ -37,15 +40,22 @@ roles/storage.objectViewer:
 
 There are 3 categories of roles:
 
-1) _Basic Roles_: predate IAM and are very broad: `Owner` (`roles/owner`), `Editor` (`roles/editor`) and `Viewer` (`roles/viewer`). They affect many (but not all!) resource types. So being an `Editor` mean you are a bucket editor just as you are a database editor.
-2) _Predefined Roles_: these came with the introduction of IAM and bundle a set of permissions of 1 resource. Example:`roles/storage.objectViewer` being able to list and get content in a bucket.
-3) _Custom Roles_
+1) _Basic Roles_ (project level): predate IAM and are very broad: `Owner` (`roles/owner`), `Editor` (`roles/editor`) and `Viewer` (`roles/viewer`). They affect many (but not all!) resource types. So being an `Editor` mean you are a bucket editor just as you are a database editor.
+2) _Predefined Roles_ (resource level): these came with the introduction of IAM and bundle a set of permissions of 1 resource. Example:`roles/storage.objectViewer` being able to list and get content in a bucket.
+3) _Custom Roles_ (resource level): allow you to bundle up permissions under a new name, allow fine tuned role shapes.
 
 ## Policies
+
+Policies bring the concepts together and form the basis of IAM. You have 3 ingredients:
+
+* the principal
+* the role(s)
+* metadata
+
 Policies are the combincation of principal 
 * Basic Roles apply to projects, e.g. project viewer, project owner
-* Predefined Roles relate to services: app engine admin, storage object viewer
+
 * roles cannot remove permissions granted by another role! You have a union of the permissions.
-* custom roles are possible
+
 
 * rights granted on the org level are passed down to all resources. That's why: higher up more restricted rights!
