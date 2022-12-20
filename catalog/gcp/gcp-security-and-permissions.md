@@ -50,12 +50,15 @@ Policies bring the concepts together and form the basis of IAM. You have 3 ingre
 
 * the principal
 * the role(s)
-* metadata
+* optional metadata to make it more fine grained (only at certain times, on objects but not buckets etc.)
 
-Policies are the combincation of principal 
-* Basic Roles apply to projects, e.g. project viewer, project owner
+### Deny Policies
 
-* roles cannot remove permissions granted by another role! You have a union of the permissions.
+It is possible to set up policies that DENY a set of permission. They work just like ALLOW permissions, but are evaluated first.
 
+### How Policies are Evaluated
 
-* rights granted on the org level are passed down to all resources. That's why: higher up more restricted rights!
+ALLOW and DENY policies are a union of everything from org down to project level. A more permissive ALLOW policy "beats" the stricter permission. Means: if you're a viewer and an editor, you'll effectively be an editor.
+
+1) IAM goes over all DENY policies. If it finds a match, the request is denied.
+2) It then goes over all ALLOW policies. If it finds a match, the request is approved.
