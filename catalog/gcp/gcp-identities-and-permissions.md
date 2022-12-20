@@ -5,7 +5,7 @@ CIA of Security:
 * integrity: data is not tampered with -> signing
 * availablity: is the right party having access -> authentication, authorization
 
-# Cloud Identity, the Identity Provider for GCP
+# Cloud Identity, the Google Identity Provider
 
 Cloud Identity is a GCP product that you can use as an SSO identity provider outside of GCP. When used in GCP, it helps with authentication of members and provides principals for which you then "do your IAM on".
 
