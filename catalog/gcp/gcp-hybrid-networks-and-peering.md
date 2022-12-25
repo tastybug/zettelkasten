@@ -1,3 +1,22 @@
+# Connecting to GCP
+
+There are a number of options to integrate on-premise networks with the GCP infrastructure to increase bandwith between both worlds.
+
+>Before starting, you need to figure out what you aim for:
+>* you only need access to Google Workspace (fka. G Suite) and Google APIs, in which case check
+>  * Direct Peering to directly peer at a Google Edge Location
+>  * Carrier Peering to connect through a support provider to Google, if you are too far away from a Google Edge location
+> * asd
+
+
+## Direct Peering (Layer 2)
+
+As the name implies, you directly peer with Google at one of over 100 locations in 33 countries.
+This traffic does include GCP traffic, it is however counted as egress traffic because Direct Peering exists outside of Google Cloud.
+
+> Direct Peering can be used by GCP, but does not require it.
+
+
 # Connecting to GCP and/or the Google Network
 
 Broadly speaking you might have the following challenges:
