@@ -9,54 +9,48 @@ There are a number of options to integrate on-premise networks with the GCP infr
 > * asd
 
 
-## Direct Peering (Layer 2)
+## Direct Peering (Layer 3)
 
 As the name implies, you directly peer with Google at one of over 100 locations in 33 countries.
 This traffic does include GCP traffic, it is however counted as egress traffic because Direct Peering exists outside of Google Cloud.
 
-> Direct Peering can be used by GCP, but does not require it.
+> Direct&Carrier Peering can be used by GCP, but does not require it.
 
+Properties:
 
-# Connecting to GCP and/or the Google Network
+* no SLA is given
+* throughput 10 Gbps
+* traffic counts as egress, but at a "reduced" rate
+* routes to the on-premise network do not appear in any VPC network
 
-Broadly speaking you might have the following challenges:
+## Carrier Peering (Layer 3)
 
-* have 2 organizations in GCP with infrastructure that you want to connect (layer 2)
-* increase your network throughput between Google and own services (layer 3)
-* have GCP resources and the own on-prem services on the same private network (layer 2)
+Again, this is primarily for customers needing access to Google Workspace (use Partner Interconnect instead otherwise). Carrier Peering exists outside of GCP, so traffic is counted as egress when leaving GCP.
 
-## Layer 2, Option 1: IPSec VPN Tunnel (also with HA option)
+Properties:
+* throughput depends on the service provider
+* traffic counts as egress, but at a "reduced" rate
+* routes to the on-premise network do not appear in any VPC network
 
-This is realistic for low-ish data volume. VPN SLA is given as 99,9%.
+## Cloud VPN (Layer 3)
 
-HA VPN is a 2-tunnel flavor of this with an SLA of 99,99%.
+This provides network connectivity between:
+* GCP and an on-premise network
+* GCP and another cloud provider
+* two GCP VPC instances
 
-> Expected throughput is 1.5 - 3 Gbps per tunnel
+Properties:
+* each tunnel supports up to 3 Gbps for the sum of ingress and egress
+* can be set up as HA VPN, with 99,99% SLA
 
 ![classic vpn topology](./pics/gcp-classic-vpn-topology.png)
 
-## Layer 2, Option 2: VPC Peering between different GCP VPCs
+## Cloud Interconnect
 
-You have different VPCs, possibly belonging to different GCP organizations.
-The subnet range must not overlap in this case.
+This solution is meant to integrate (again) an on-premise network with a GCP VPC. It comes in 2 flavors: `Dedicated Interconnect` and `Partner Interconnect`.
+This is a co-location solution and you pick the options by proximity (or lack of) to a Google datacenter, called Point of Presence (PoP).
 
-## Layer 2, Option 3: Cloud Interconnect
-
-This achieves the same result as a VPN, but allows for more throughput due to a physical connection. It requires co-location of at least the router of the customer in one of the supported data centers (they are spread all around the world).
-SLA is given as 99,9% up to 99,99%.
-
-> Expected throughout 10 Gbps (100 Gbps in beta) per link
-
-## Layer 2, Option 4: Partner Interconnect
-
-If `Cloud Interconnect` is unrealistic, peering via a service provider is possible (they might be closer to your physical location). This likely means shared infrastructure in between GCP and the onprem network and thus lower throughput.
-
-> Expected throughput is 50 Mbps - 10 Gbps per connection
-
-## Layer 3, Options 1&2: Direct or Carrier Peering
-
-One is able to connect directly to Google Edge “Points of Presence” (PoPs). Alternatively, this can also be done via a Carrier inbetween, giving you more geographical flexibility (Carrier has alternative PoPs). The result of this is an increase in network throughput.
-
-Example: Video Content Provider that wants to upload massive amounts of content on a regular basis.
-
-> There are no SLAs for Peering. Throughput is given as 10 Gbps for direct peering and “depends on carrier” for Carrier peering
+Properties:
+* bandwidth between 10 and 100 Gbps per VLAN connector
+* allows access to all GCP products, but NOT Google Workspace
+* traffic is not encrypted between GCP and the other network
