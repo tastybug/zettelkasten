@@ -151,3 +151,18 @@
 * eventual consistent
 * high availability, failover, patching and monitoring
 * 99.9% availability
+
+## BigQuery
+
+This is an OLAP system that allows you to run analytics over vast data lakes.
+You can feed data into GBQ from a variety of sources: CSV files, Google Drive, Cloud Storage Buckets and many more. Data import can be automated via `BigQuery Data Transfer Service`, which pulls data regularly from a variety of sources.
+
+GBQ can also be fed with billing data and logs.
+
+You pay for:
+* running queries (this factors in over how much data you run the query)
+* data storage
+* streaming data ingestion or ingestion via the GBQ Storage Write API
+
+You (currently) don't pay for:
+* batch loading data into and batch exporting data from GBQ
