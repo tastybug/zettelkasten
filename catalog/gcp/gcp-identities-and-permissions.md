@@ -40,7 +40,7 @@ Examples:
 
 ## Roles
 
-Roles are a set of privileges, identified my a string: 
+Roles are a set of privileges, identified by a string: 
 ```
 roles/storage.objectViewer:
   - resourcemanager.projects.get
