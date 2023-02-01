@@ -166,3 +166,8 @@ You pay for:
 
 You (currently) don't pay for:
 * batch loading data into and batch exporting data from GBQ
+
+### Data Lifecycling
+GBQ has built-in data lifecycling. You can apply default table (and partition) expiration settings. Per-table TTL is also possible.
+
+An expiring table is deleted with all contained data. By partitioning data by date, one is able to delete expired data but keep the table, even if empty.
