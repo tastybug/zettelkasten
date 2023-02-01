@@ -35,10 +35,10 @@
   * multi-regional (you pick europe, asia, north-america and it will spread the data across some concrete regions)
   * dual-region: you pick 2 concrete regions 
   * single region: it's kept in one region that you can select
-* offers fine-grained access control to complete buckets or single objects
+* you can either have bucket level access control (recommended) or object-level fine grained access
   * a maximum of 100 access control lists can exist per bucket
   * an ACL specifies a list of users (can be concrete users, `allUsers` or `allAuthenticatedUsers`) and the permission (`owner`, `writer`, `reader`)
-  * it's possible to create "signed URLs" that are time-limited, are signed and specify allowed operations (GET, PUT, DELETE) - sort of like a URL with an embedded JWT (so it's a bearer URL)
+* it's possible to create "signed URLs" that are time-limited, are signed and specify allowed operations (GET, PUT, DELETE) - sort of like a URL with an embedded JWT (so it's a bearer URL)
 * automated object lifecycle management
 * object versioning supported and multipe versions can be retained
 * strongly consistent
