@@ -20,9 +20,9 @@ This option allows you to run a given container image (it must be present in GCP
 
 > The application must be stateless!
 
-You pick a region for your image. You decide on elasticity by selected a runtime environment, amount of RAM, max burst amount of instances and so on. Once the container deployed, it is available under a URL like <https://hello-cloud-run-oxxok2hixa-uc.a.run.app>.
+You pick a region for your image. You decide on elasticity by selecting a runtime environment, amount of RAM, max burst amount of instances and so on. Once the container deployed, it is available under a URL like <https://hello-cloud-run-oxxok2hixa-uc.a.run.app>.
 
-A CD pipeline can be setup as well but binding a Cloud Build setup to the Cloud Run setup. This will build containers from a source repository, adding them to the GCR - the container registry.
+A CD pipeline can be setup as well by binding a Cloud Build setup to the Cloud Run setup. This will build containers from a source repository, adding them to the GCR - the container registry.
 
 ## Non-Containerized Application
 
