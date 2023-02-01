@@ -40,7 +40,7 @@ TODO:
 
 ### App Engine
 
-Each GCP project can contain a __single__ App Engine application. An application can consist of multiple different services though.
+Each GCP project can contain a __single__ App Engine application. An application can consist of multiple different services though. A service can exist in multiple versions and at the version level, the service instance is available.
 
 ![app engine model](./pics/gcp-app-engine-application-model.png)
 
@@ -50,6 +50,7 @@ App Engine comes in flavors `App Engine Standard Environment` and `App Engine Fl
 
 Standard:
 * runs in a sandbox
+* you can do lift&shift by adding an `app.yaml` file with metadata to it
 * very fast deployment
 * the service needs to be highly elastic
 * the service is written in a supported framework and version (e.g. Java 8, 11, 17; Go 1.11 etc)
@@ -65,9 +66,7 @@ Flexible:
 * minimum of 1 instance
 * price based on vCPU, memory and persistent disk claim
 
-An application is a logical frame around a number of services (concrete applications in a supported language like Java, Go, Node, PHP, Py, Ruby), allowing those services to talk to each other. A service can exist in multiple versions and at the version level, the service instance is available.
-
-You start with a given application and add a `app.yaml` file with metadata to it, helping App Engine to understand it.
-
 #### Deploying App Engine Versions
-Service delivery can be done with `gcloud app deploy --version=one --quiet`. Once deployed, it is available under this URL scheme: `https://VERSION-dot-SERVICE-dot-PROJECT_ID.REGION_ID.r.appspot.com`. (Note: region_id is not same as region name. `uc` is for example the id for `us-central`).
+Service delivery can be done with `gcloud app deploy --version=one --quiet`. Once deployed, it is available under this URL scheme: `https://VERSION-dot-SERVICE-dot-PROJECT_ID.REGION_ID.r.appspot.com`. 
+
+Note: region_id is not same as region name. `uc` is for example the id for `us-central`.
