@@ -77,3 +77,11 @@ ALLOW and DENY policies are a union of everything from org down to project level
 
 1) IAM goes over all DENY policies. If it finds a match, the request is denied.
 2) It then goes over all ALLOW policies. If it finds a match, the request is approved.
+
+# Identity Aware Proxy (IAP)
+
+IAP is an OAuth2 proxy that you can put in front of Compute Engine, GKE and on-premise applications. It takes the caller through the usual authentication flow and checks with IAM if the caller has permission to reach the target.
+
+IAP is usually in front of an ingress control or load balancers.
+
+IAP cannot be applied to internal traffic patterns.
