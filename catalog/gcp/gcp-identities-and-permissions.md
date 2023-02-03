@@ -25,11 +25,11 @@ IAM supports a variety of principals and means of identity management:
 * Google Workspace (fka G Suite), which technically is again a tenant in Cloud Identity
 * Service Accounts (i.e. technical users), which are the only accounts that solely exist in GCP
 
-## Permissions
+## Permissions: what you can do
 
 A permission describes what can be done on a particular resource. It's identified by a string like `storage.objects.get`.
 
-## Resources
+## Resources: what you act on
 
 Cloud resources are the various GCP services (Cloud Storage, Cloud SQL) and INSTANCES of those services.
 Examples:
@@ -38,9 +38,9 @@ Examples:
 * all buckets in a project
 * all VMs in a project
 
-## Roles
+## Roles, a group of permissions
 
-Roles are a set of privileges, identified by a string: 
+Roles are a set of permissions, identified by a string: 
 ```
 roles/storage.objectViewer:
   - resourcemanager.projects.get
