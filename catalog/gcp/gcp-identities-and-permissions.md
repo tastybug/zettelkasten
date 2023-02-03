@@ -13,10 +13,10 @@ It is possible to sync external user directories to Cloud Identity. This allows 
 
 # IAM
 
-Identity and access management deals with the question of who is allowed to do what.
+Identity and access management deals with the question of who is allowed to do what. 
 You assign principals to roles, which gives you a policy.
 
-## Principals
+## Principals: "subject"
 
 IAM supports a variety of principals and means of identity management:
 * google account (me@google.com)
@@ -25,11 +25,11 @@ IAM supports a variety of principals and means of identity management:
 * Google Workspace (fka G Suite), which technically is again a tenant in Cloud Identity
 * Service Accounts (i.e. technical users), which are the only accounts that solely exist in GCP
 
-## Permissions: what you can do
+## Permissions: "verb on object"
 
 A permission describes what can be done on a particular resource. It's identified by a string like `storage.objects.get`.
 
-## Resources: what you act on
+## Resources: "object"
 
 Cloud resources are the various GCP services (Cloud Storage, Cloud SQL) and INSTANCES of those services.
 Examples:
@@ -38,7 +38,7 @@ Examples:
 * all buckets in a project
 * all VMs in a project
 
-## Roles, a group of permissions
+## Roles, a group of permissions / verbs
 
 Roles are a set of permissions, identified by a string: 
 ```
@@ -57,7 +57,7 @@ There are 3 categories of roles:
 
 ## Policies
 
-Policies bring the concepts together and form the basis of IAM. You have 3 ingredients:
+Policies bring the concepts together and form the basis of IAM. It's the full sentence of "subject, verb(s), object". You have 3 ingredients:
 
 * the principal
 * the role(s)
@@ -80,7 +80,7 @@ ALLOW and DENY policies are a union of everything from org down to project level
 
 # Identity Aware Proxy (IAP)
 
-IAP is an OAuth2 proxy that you can put in front of Compute Engine, GKE and on-premise applications. It takes the caller through the usual authentication flow and checks with IAM if the caller has permission to reach the target.
+IAP is an OAuth2 proxy that you can put in front of AppEngine, Compute Engine, GKE and on-premise applications. It takes the caller through the usual authentication flow and checks with IAM if the caller has permission to reach the target.
 
 IAP is usually in front of an ingress control or load balancers.
 
