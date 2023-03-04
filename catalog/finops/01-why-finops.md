@@ -9,5 +9,5 @@ With large companies spending millions in the cloud, the silos between tech, pro
 
 The old procurement processes don't work anymore. Cloud is self-service and on-demand. Engineers can request resources for pennies and a micro-procurement process only slows down innovation, a mayor side effect of cloud adoption.
 
-## Effects of Not Adopting FinOps
+FinOps, ideally, is a silo-breaking culture that brings value or at least visibility on what is happening.
 
