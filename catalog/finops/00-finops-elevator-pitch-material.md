@@ -13,6 +13,8 @@ There is a FinOps nirvana of achieving unit economics awareness. Where one is ab
 * A FinOps team with cloud domain expertise builds trust and credibility.
 * A central FinOps team is a facilitator among teams.
 * Execution is decentralized, but based on data and advice given centrally.
+* Cloud procurement happens decentralized, has various drivers (fast growth). Losing track of who does what can be deadly. Bringing structure to this in a time where a central procurement dept. is dead is crucial. Who is it that says: "Move fast, but make sure not to exceed $0.40 per user transaction. How much do we pay at the moment."
+* Business analyst sits between customer and product team. FinOps sits "between" Finance/Executives and product team.
 
 ## A FinOps Journey
 
