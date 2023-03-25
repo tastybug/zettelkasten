@@ -13,20 +13,6 @@ The centralized team is like a platform team for a financial lens on things, pro
 * watch over efficiency
 * drive the cultural shift that makes engineers consider costs as an efficiency metric
 
-### Central FinOps Team Responsibilities
-
-* provide shared tooling
-* showback
-* provide alternatives to unefficiencies (e.g. storage class in cloud buckets)
-* is generally an enabler for the resource owners
-* support rate negotiations with the cloud providers
-
-### Engineers, Developers, Ops
-
-* introduce cost as a metric contributing to efficiency measurement
-* introduce activities that evaluate rightsizing, waste reduction
-* give feedback on whether spending anomalies are expected or problematic
-
 ### Finance
 
 * use reporting from the FinOps team for accounting and forecasting
@@ -37,8 +23,12 @@ The centralized team is like a platform team for a financial lens on things, pro
 
 Manage the relation to vendors like cloud providers. With help of finance, they need to engange in rate negotiations.
 
-### Product / Business Teams (incl. PM, EM)
+### Product / Business Teams (incl. PM, EM) / Developers / Ops
 
+* introduce cost as a metric contributing to efficiency measurement
+* they optimize the "USE" part of the equasion "COST = USE x RATE"
+  * evaluate rightsizing, waste reduction
+  * give feedback on whether spending anomalies are expected or problematic
 * working with the central team, they want to understand the total cost of running features, products and services
 * gauge profitability taking infra cost into account
 * look into upcoming features with central and engineering, selecting the cloud resource with the best cost/value ration
@@ -48,11 +38,13 @@ Manage the relation to vendors like cloud providers. With help of finance, they 
 
 These folks are crossfunctional people with tech and finance knowledge.
 
-* drives best practices into the teams
 * provide shared tooling, reporting (e.g. showback)
-* are the glue holding the different functions together
 * provide alternatives to unefficiencies (e.g. storage class in cloud buckets)
 * is generally an enabler for the resource owners
-* support rate negotiations with the cloud providers
-
+* drives best practices into the teams
+* are the glue holding the different functions together
+* is generally an enabler for the resource owners
+* they optimize the "RATE" part of the equasion "COST = USE x RATE"
+  * support rate negotiations with the cloud providers
+  * provide alternatives to unefficiencies (e.g. storage class in cloud buckets)
 
