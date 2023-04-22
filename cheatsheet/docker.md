@@ -29,8 +29,13 @@ Print logs that the container produced. Works also for a stopped container.
 Like tail -f for a container
 * `docker logs -f name`
 
-What the name suggests
+Shows process list inside the container
 * `docker top name`
+
+Show containers as process list with CPU,Mem,Net usage.
+* `docker stats [container]`
+
+## Running, Interacting
 
 Run a “tool container” (executing ENTRYPOINT or CMD), attaches to the running command and, after stopping, the container deleted right away.
 * `docker run --rm -t -i tastybug/someclient`
