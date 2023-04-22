@@ -35,6 +35,9 @@ Shows process list inside the container
 Show containers as process list with CPU,Mem,Net usage.
 * `docker stats [container]`
 
+Show docker events like container lifecycle stuff.
+* `docker events --since 0`
+
 ## Running, Interacting
 
 Run a “tool container” (executing ENTRYPOINT or CMD), attaches to the running command and, after stopping, the container deleted right away.
