@@ -1,6 +1,6 @@
 # Component Scanning
 
-Component scan is the mechanism that looks for all Beans that are not explicitly covered by Configuration classes. It looks for _implicit_ configuration, which are classes annotated as `@Service` and `@Component`.
+Component scan is the mechanism that looks for all Beans that are not explicitly covered by Configuration classes. It looks for _implicit_ configuration, which are classes annotated as `@Service`, `@Component`, `@Repository`, `@Controller`, `@RestController` and `@Configuration` which are the so called "Stereotype Annotations".
 
 Component scans are recursive and span the whole classpath. When configured too broadly (`@ComponentScan("org")`), the startup time is impacted. This is how it's done explicitly:
 
@@ -80,3 +80,30 @@ public OuterClass {
 
 A Bean can be declared as lazy initialzed with `@Lazy(true)`, which menas it will be created on first use.
 A lazy Bean is preventing the application from failing fast on problems though, so this should be avoided.
+
+## @PostConstruct and @PreDestroy
+
+For Beans that are part of the application, you can annotate Bean methods as such and the Spring Context will make sure to at least call `@PostConstruct` to pre-heat caches, log state and such. `@PreDestroy` otoh will be called too, but this is not guaranteed if the process dies too quickly.
+
+For library code and such, there is another approach:
+
+```java
+@Configuration
+public CacheConfig {
+
+ @Bean(initMethod="populateCache", destroyMethod="flushCache")
+ public ThirdPartyCache thirdPartyCache() {
+   //
+ }
+
+ public void populateCache() {
+  //
+ }
+
+ public void flushCache() {
+  //
+ }
+}
+```
+
+These methods must exist in the Configuration class
