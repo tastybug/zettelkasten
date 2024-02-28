@@ -101,8 +101,8 @@ In Integration Tests situtations you can use `@ActiveProfiles(...)`. See later m
 Examples:
 
 * `@Value("${user.region}") private String region;` 
-* `@Value("#{environment['user.region']}")`
+* `@Value("#{environment['user.region']}") private String region;`
 * `@Value("#{systemProperties['user.region']}") private String region;` 
-* `@Value("#{regionDecisionBean.getRegion}") private String region;` (regionDecisionBean must be a valid bean in the context)
+* `@Value("#{regionStrategyBean.getRegion}") private String region;` (regionStrategyBean must be a valid bean in the context)
 
 Available default references are `environment`, `systemProperties` and `systemEnvironment`. SpEL allows to create custom functions and references, which is heavily used by Spring Security and other Spring modules.
