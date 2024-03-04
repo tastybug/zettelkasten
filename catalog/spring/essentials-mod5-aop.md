@@ -23,6 +23,8 @@ Spring uses AspectJ annotations, but does not use the AspectJ weaving approach. 
 
 ### Small Example
 
+This example assumes the usage of CGLib proxies. If that's not the case, then all join points must be declared in an interface (`Cache` must be an interface, with some setters), otherwise the pointcuts will not work.
+
 First, enable AOP.
 ```
 @Configuration
@@ -37,15 +39,99 @@ Next, set up an aspect.
 ```
 package com.app.aspects;
 
-@Aspect
+@Aspect // aspect
 @Component
 public class LogPropertyChanges {
   private Logger logger = Logger.getLogger(getClass());
 
-  @Before("execution(void set*(*))")
-  public void logChange() {
-    logger.info("Property changed!");
+  @Before("execution(void set*(*))") // pointcut
+  public void logChange(JoinPoint jp) { // the advice
+    String methodName = point.getSignature().getName();
+    Object newValue = point.getArgs()[0];
+    logger.info(methodName + ": changes to " + newValue);
   }
 }
 ```
 
+Now see this in action.
+
+```
+@Autowired
+private Cache cache;
+
+cache.setCacheSize(200);
+// now you see the log statement
+```
+
+### Pointcut Matching Rules
+
+The method pattern is: `[Modifiers] ReturnType [ClassType] MethodName (Arguments) [throws Exception]`.
+
+This pattern is used in the annotation value `execution(<method pattern>)`. Patterns can be chained together logically (`&&`, `||`, `!`): `execution(<pattern1>) || execution(<pattern2>)`.
+
+There are 2 kinds of wildcards: 
+* `*` wildcards match once (return type, package, class, method name, argument)
+* `..` matches zero or more (arguments, packages)
+
+An example:
+
+```
+execution(* rewards.restaurant.*Service.find*(..))
+^ desginator
+          ^ return type
+            ^ package
+                               ^ class
+                                        ^ method
+                                              ^ arguments
+```
+
+#### More examples
+
+1. `execution(void send*(rewards.Dining))`: any method starting with `send` that has a single `Dinging` argument and returns void. Note here the use of fully-qualified class names, which is required for non-basic types.
+2. `execution(* send(*))`: any `send` method with a single parameter and any kind of return value.
+3. `execution(* send(int, ..))`: any `send` method with a first parameter of type `int` and zero or many further parameters, returning any kind of return value.
+4. `execution(void example.MessageServiceImpl.*(..))`: any method in class `MessageServiceImpl` (or subclasses!) with any number of parameters and a `void` return type.
+5. `execution(void example.MessageService.send(*))`: the `send` method defined by interface `MessageService` with one parameter and `void` return type.
+6. `execution(@javax.annotation.secutiry.RolesAllowed void send*(..))` this matches methods annotated with `@RolesAllowed`
+7. `execution(* rewards.*.restaurant.*.*(..)` any method of any type in package `rewards.*.restaurant` with any return type and one or more parameters. The package wildcard covers __1 level of depth__.
+8. `execution(* rewards..restaurant.*.*(..)` this is the same as before, but it has indefinitive depth.
+9. `execution(* *..restaurant.*.*(..)` again, broader than the one before. This would matches packages `restaurant`, `com.restaurant` and `com.foo.bar.baz.restaurant`.
+
+### Advices
+
+There are 2 types of Advices:
+
+* `@Before`: the proxy will call the advice before calling the method. If the advice fails, the target method will not be called.
+* `@AfterReturningAdvice`: the target is called first and if it's __NOT throwing an exception__, the Advice is executed. Note that the type of `@AfterReturningAdvice(returning="xyz")` as given in the Advice's method signature is an filter additional to the `execution` pattern! See example below.
+* `@AfterThrowingAdvice`: the target is called first and if an exception is thrown, the Advice is executed.
+
+#### Examples
+
+```
+@Aspect
+@Component
+public class PropertyChangeTracker {
+  private Logger logger = Logger.getLogget(getClass());
+
+  @Before("execution(void set*(..)")
+  public void trackChange() {
+    logger.info("Something is about to be changed..");
+  }
+
+  // Note: the returning type must match the type of the Advice method signature,
+  // which here is "Reward", otherwise the Advice is not invoked.
+  @AfterReturningAdvice(value = "execution(* service..*.*(..))",
+                        returning="reward") 
+  public void audit(JoinPoint jp, Reward reward) {
+    logger.info(jp.getSignature() + " returns the following: " + reward.toString());
+  }
+
+  // Note: the exception type must match the type of the Advice method signature,
+  // which here is "SomeException", otherwise the Advice is not invoked.
+  @AfterThrowingAdvice(value = "execution(* service..*.*(..))",
+                       throwing="e") 
+  public void audit(JoinPoint jp, SomeException e) {
+    logger.info(jp.getSignature() + " threw exception: " + e.toString());
+  }
+}
+```
