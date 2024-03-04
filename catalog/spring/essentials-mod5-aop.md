@@ -28,7 +28,7 @@ This example assumes the usage of CGLib proxies. If that's not the case, then al
 First, enable AOP.
 ```
 @Configuration
-@EnableAspectJAutoProxy // with this, Spring looks for @Aspect
+@EnableAspectJAutoProxy //enables @Aspect; with SpringBoot, autoconf takes care of this automatically
 @ComponentScan(basePackages="com.app.aspects")
 public class AopConfig {
   //
@@ -99,11 +99,13 @@ execution(* rewards.restaurant.*Service.find*(..))
 
 ### Advices
 
-There are 2 types of Advices:
+There are different types of Advices:
 
 * `@Before`: the proxy will call the advice before calling the method. If the advice fails, the target method will not be called.
-* `@AfterReturningAdvice`: the target is called first and if it's __NOT throwing an exception__, the Advice is executed. Note that the type of `@AfterReturningAdvice(returning="xyz")` as given in the Advice's method signature is an filter additional to the `execution` pattern! See example below.
-* `@AfterThrowingAdvice`: the target is called first and if an exception is thrown, the Advice is executed.
+* `@After`: execution happens after target, irregardless of whether it was a success or not.
+* `@AfterReturning`: the target is called first and if it's __NOT throwing an exception__, the Advice is executed. Note that the type of `@AfterReturningAdvice(returning="xyz")` as given in the Advice's method signature is an filter additional to the `execution` pattern! See example below.
+* `@AfterThrowing`: the target is called first and if an exception is thrown, the Advice is executed. The exception will keep propagating as it is, but you can throw a different type of exception.
+* `@Around`: the most flexible Advice, it's like a proxy! The Aspect delegates only to the Advice and it is up to the Advice to call the target (or not) and handle the return/exception. Look at the neat example where the Aspect implements caching!
 
 #### Examples
 
@@ -120,18 +122,42 @@ public class PropertyChangeTracker {
 
   // Note: the returning type must match the type of the Advice method signature,
   // which here is "Reward", otherwise the Advice is not invoked.
-  @AfterReturningAdvice(value = "execution(* service..*.*(..))",
-                        returning="reward") 
+  @AfterReturning(value = "execution(* service..*.*(..))",
+                  returning="reward") 
   public void audit(JoinPoint jp, Reward reward) {
     logger.info(jp.getSignature() + " returns the following: " + reward.toString());
   }
 
   // Note: the exception type must match the type of the Advice method signature,
   // which here is "SomeException", otherwise the Advice is not invoked.
-  @AfterThrowingAdvice(value = "execution(* service..*.*(..))",
-                       throwing="e") 
+  @AfterThrowing(value = "execution(* service..*.*(..))",
+                 throwing="e") 
   public void audit(JoinPoint jp, SomeException e) {
     logger.info(jp.getSignature() + " threw exception: " + e.toString());
+    throw new OtherException(e); // unless we throw something, e will be thrown further
+  }
+
+  @After("execution(void update*(..))") 
+  public void trackUpdate() {
+    logger.info("Something was updated, successfully or not, can't tell.");
+  }
+
+  @Around("execution(@example.Cacheable * loadStuff(..))")
+  public Object cache(ProceedingJoinPoint pjp) throws Throwable {
+    Object value = cacheStore.get(CacheUtils.toKey(pjp));
+
+    if (value != null) {
+      return value;
+    }
+    value = point.proceed();
+    cacheStore.put(CacheUtils.toKey(pjp), value);
+    return value;
   }
 }
 ```
+
+### Limitations of Spring AOP
+
+1. it can only advise non-private methods
+2. can only apply aspects to Spring Beans
+3. when using proxies: when method A() calls method B() on the same class/interface, the advice will never be executed for B() because it's a "lateral call" inside the proxy.
