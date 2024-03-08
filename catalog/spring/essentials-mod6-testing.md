@@ -67,7 +67,49 @@ public class TransferServiceTests {
 }
 ```
 
-## Profiles for Different Run Modes
+### Activating Profiles in Tests
 
-You can already abstract away the runtime environment by providing environment variables, providing JDBC URLs and whatnot to make differences in prod and dev stages manageable. The concept of profiles takes this one step further and also changes the composition of your application by disabling/enabling Beans, replacing beans with Mocks and so on.
+In tests, you use `@ActiveProfiles` to activate profiles. In production module, you don't do this, instead you use `-d spring.profiles.active=a,b,c`.
 
+```
+@SpringJUniConfig(DevConfig.class)
+@ActiveProfiles("jdbc")
+public class TransferServiceTests {
+  // ..
+}
+
+@Repository
+@Profile("jdbc")
+public class JdbcRepository {
+  // ..
+}
+```
+
+## Working with Databases in Tests
+
+You can run DDL and DML scripts before each test like this:
+```
+@Test
+@Sql("/testfiles/test-data.sql") // run before test; path is classpath I think
+void someTest() {
+}
+```
+
+But there is more fine grained control possible. Note that the class level `Sql` annotation is executed before each test UNLESS the test case comes with its own `@Sql` annotation.
+```
+@SpringJUnitConfig(..)
+@Sql({"/testdata/schema.sql", "/testdata/testdata.sql"}) // run before each test unless test case has own annotation!
+class Tests {
+
+  // here the class level annotation is executed
+  @Test
+  void someTest {}
+
+  // comes with own db setup logic
+  @Test
+  @Sql("/testdata/setupBadTransfer.sql") // runs before test
+  @Sql("/testdata/cleanup.sql",
+       executionPhase=Sql.ExecutionPhase.AFTER_TEST_METHOD) // runs after test
+  void transferErrorTest() {}
+}
+```
