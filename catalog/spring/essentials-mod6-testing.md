@@ -66,3 +66,8 @@ public class TransferServiceTests {
   ...
 }
 ```
+
+## Profiles for Different Run Modes
+
+You can already abstract away the runtime environment by providing environment variables, providing JDBC URLs and whatnot to make differences in prod and dev stages manageable. The concept of profiles takes this one step further and also changes the composition of your application by disabling/enabling Beans, replacing beans with Mocks and so on.
+
