@@ -170,6 +170,6 @@ private LineItem mapLineItem(ResultSet rs) {
 }
 ```
 
+## Working with Exceptions
 
-
-
+Spring generally only uses unchecked exceptions. In context of JDBC, subclasses of `DataAccessException` are used. It's the same whether you use JDBC, Hibernate, JPA or other.
