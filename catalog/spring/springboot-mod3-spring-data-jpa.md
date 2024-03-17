@@ -72,7 +72,8 @@ Setting up JPA repositories follows the same instructions all the time:
 1. annotate domain pojos, turning them into entities
 2. define repositories as interfaces (extending `CrudRepository<T, K>` or `Repository<T, K>`)
 
-Spring Data will then at runtime implement this by scanning for those interfaces.
+Spring Data will then at runtime implement this by scanning for those interfaces. All repositories are picked up via `@SpringBootApplication`, unless they are not in a sub-package. Then, you can use `@EnableJpaRepositories(basePackages="com.myapp.repos")`.
+
 
 ### Creating Domain Entities
 
@@ -110,7 +111,7 @@ and so on.
 ### `Repository`, `CrudRepository` and other kinds
 
 Both kinds are typed: first is the entity stored, the second is the primary key.
-`@Repository` is a pure marker interface, where everything is done programmatically.
+`Repository` is a pure marker interface, where everything is done programmatically. 
 
 ```java
 @Repository
@@ -135,13 +136,19 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 
 The method names are converted into queries. The grammar is as such:
 
-* `find(First)By<MemberOfEntity><Op>`
+* `find(First)By<MemberOfEntity><Op>`, e.g. `findFirstByNameIgnoreCase`
+* is there something similar for commands? not sure
+
+Whenever the grammar gets too unwieldy, you can add `@Query(some_query)` and use any method name.
 
 ```java
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
   public Customer findFirstByEmail(String email);
   public List<Customer> findByOrderDateLessThan(Date someDate);
   public List<Customer> findByOrderDateBetween(Date d1, Date d2);
+
+  @Query("SELECT c FROM Customer c WHERE c.emailAddress = ?1) // ?1 maps to first parameter
+  Customer findByEmail(String email);
 
   // this is the query language of the underlying db; here it's JPQL/"Java Persistence Query Language"
   @Query("SELECT c FROM Customer c WHERE c.email NOT LIKE '%@%'")
