@@ -110,8 +110,9 @@ and so on.
 
 ### `Repository`, `CrudRepository` or `JpaRepository`?
 
-Both kinds are typed: first is the entity stored, the second is the primary key.
-`Repository` is a pure marker interface, where everything is done programmatically. 
+All kinds are typed: first is the entity stored, the second is the primary key.
+
+`Repository` is a pure marker interface, where everything is done programmatically by the dev.
 
 ```java
 @Repository
@@ -125,7 +126,7 @@ public interface CustomerRepository extends Repository<Customer, Long> { .. }
 public interface CustomerRepository extends CrudRepository<Customer, Long> { .. }
 ```
 
-But it get better: there is also `PagingAndSortingRepository` extending from `CrudRepository` offering `Iterable<T> findAll(Sort)` and `Page<T> findAll(Pageable)`.
+But it gets better: there is also `PagingAndSortingRepository` extending from `CrudRepository` offering `Iterable<T> findAll(Sort)` and `Page<T> findAll(Pageable)`.
 
 ```java
 @Repository
