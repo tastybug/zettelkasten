@@ -145,8 +145,83 @@ Autoconfig is set up so that overrides are easy to accomplish. Since it comes do
 * explicitly disable autoconfig
 * change dependencies or their versions
 
+### Using Properties
 
+This is an example of how to influence datasource autoconf via yaml:
 
+```yaml
+spring:
+  datasource:
+    url: 'some url'
+    username: 'user'
+    password: 'pass'
+
+    # connection pool settings
+    type: # fully qualified name of the connection pool implementation to use
+    initial-size: 5
+    max-active: 10
+    max-idle: 8
+    min-idle: 5
+
+  # basic db setup, akin to `@Sql` annotations
+  sql:
+    init:
+      schema-locations: create-schema.sql
+      data-locations: create-master-data.sql
+  
+```
+
+### Explicitly Disabling Autoconfig
+
+Either by annotation:
+```java
+// either this
+@EnableAutoConfiguration(exclude=DataSourceAutoConfiguration.class)
+// OR that
+@SpringBootApplication(exclude=DataSourceAutoConfiguration.class)
+public class MyApplication {..}
+```
+
+or by configuration:
+```yaml
+spring:
+  autoconfigure:
+    # comma separated list:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+```
+
+### Overriding Dependencies or Depdendency Versions
+
+If you're using the parent.pom, you can override versions of dependencies as such:
+
+```xml
+<properties>
+  <spring-framework.version>5.3.22</spring-framework.version>
+</properties>
+```
+
+If it's an artifact that is not inherited from the parent, you need to add an explicit dependency in the `<dependencies>` block.
+
+#### Substitute Dependencies (e.g. Jetty instead of Tomcat)
+
+By substituting transitive dependencies of the `-starter` packages, you can change parts of the BOM. Autoconfiguration will adapt accordingly - in this example we exchange Tomcat with Jetty. Jetty will be auto-configured.
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+  <exclusions>
+    <exclusion>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-jetty</artifactId>
+</dependency>
+```
 
 
 
