@@ -72,7 +72,7 @@ Setting up JPA repositories follows the same instructions all the time:
 1. annotate domain pojos, turning them into entities
 2. define repositories as interfaces (extending `CrudRepository<T, K>` or `Repository<T, K>`)
 
-Spring Data will then at runtime implement this by scanning for those interfaces. All repositories are picked up via `@SpringBootApplication`, unless they are not in a sub-package. Then, you can use `@EnableJpaRepositories(basePackages="com.myapp.repos")`.
+Spring Data will then at runtime implement this by scanning for those interfaces and then creating proxies with the logic. From the developer POV, you usually don't see the implementation. All repositories are picked up via `@SpringBootApplication`, unless they are not in a sub-package. Then, you can use `@EnableJpaRepositories(basePackages="com.myapp.repos")`.
 
 
 ### Creating Domain Entities
