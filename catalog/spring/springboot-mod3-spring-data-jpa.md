@@ -108,7 +108,7 @@ public class Account { .. }
 
 and so on.
 
-### `Repository`, `CrudRepository` and other kinds
+### `Repository`, `CrudRepository` or `JpaRepository`?
 
 Both kinds are typed: first is the entity stored, the second is the primary key.
 `Repository` is a pure marker interface, where everything is done programmatically. 
@@ -130,6 +130,13 @@ But it get better: there is also `PagingAndSortingRepository` extending from `Cr
 ```java
 @Repository
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Long> { .. }
+```
+
+Finally there is also `JpaRepository`, extending `PagingAndSortingRepository`. It offers `flush` and some batch operations. Here, the `findAll` returns a `List<T>` instead of the `Iterable<T>`. This interface provides the highest value and complexity.
+
+```java
+@Repository
+public interface CustomerRepository extends JpaRepository<Customer, Long> { .. }
 ```
 
 ### Extending the Repository with Custom Methods
