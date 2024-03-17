@@ -65,9 +65,9 @@ spring:
         foo: bar
 ```
 
-## Creating Repositories
+## Setting Things Up
 
-Setting up JPA repositories follows the same instructions all the time:
+Setting up JPA data access follows the same steps all the time:
 
 1. annotate domain pojos, turning them into entities
 2. define repositories as interfaces (extending `CrudRepository<T, K>` or `Repository<T, K>`)
