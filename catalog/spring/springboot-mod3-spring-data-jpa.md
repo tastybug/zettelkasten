@@ -58,7 +58,7 @@ spring:
     database: default # let Hibernate detect it
     show-sql: true
     hibernate:
-      ddl-auto: update # validate, update, create, create-drop
+      ddl-auto: update # none, validate, update, create, create-drop
     properties:
       hibernate:
         format_sql: true
