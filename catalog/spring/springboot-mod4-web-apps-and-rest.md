@@ -153,11 +153,78 @@ Developing web apps requires frequent restarts to verify things. To make this ea
 </dependency>
 ```
 
+----
 
+## Putting it all Together
 
+`pom.xml`:
 
+```xml
+<parent>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-parent</artifactId>
+  <version>2.7.5</version>
+</parent>
+<dependencies>
+  <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-web</artifactId>
+  </dependency>
+</dependencies>
+<build>
+  <plugins>
+    <plugin>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-maven-plugin</artifactId>
+    </plugin>
+  </plugins>
+</build>
+```
 
+`RewardController.java`:
 
+```java
+@RestController
+public class RewardController {
+  private RewardLookupService lookupService;
+
+  public RewardController(RewardLookupService lookupService) {
+    this.lookupService = lookupService;
+  }
+
+  @GetMapping("/rewards/{id})
+  public Reward show(@PathVariable("id") long id) {
+    return lookupService.lookupReward(id);
+  }
+}
+```
+
+`Application.java`. If the controller is in the same or sub-package, component scan will find it:
+
+```java
+@SpringBootApplication
+public class Application {
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+```
+
+`appliation.yaml` (not required, but helpful to see):
+```yaml
+server:
+  port: 8088 # make it not use default 8080
+  servlet:
+    session:
+      timeout: 5m
+```
+
+Running it:
+```bash
+mvn package
+java -jar helloApp-0.0.1-SNAPSHOT.jar
+curl -X GET -H 'Accept: application/json' 'http://localhost:8088/rewards/1'
+```
 
 
 
