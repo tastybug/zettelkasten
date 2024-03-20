@@ -225,6 +225,3 @@ mvn package
 java -jar helloApp-0.0.1-SNAPSHOT.jar
 curl -X GET -H 'Accept: application/json' 'http://localhost:8088/rewards/1'
 ```
-
-
-
