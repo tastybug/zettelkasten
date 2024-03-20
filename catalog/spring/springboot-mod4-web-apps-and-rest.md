@@ -91,7 +91,8 @@ public OrderItem item(
 If you take in a request, the caller provides an `Accept: mimetype` header to indicate the acceptable format. In the response, the host indicates the delivered format with `Content-Type: mimetype`. This is called "Content Negotiation" and this should not have an impact on the controller logic.
 Message Converts (auto-configured by Spring Boot) take care of mapping the domain objects to these formats so that the developer does not have to do this programmatically.
 
-Alternatively, you can build responses fully explicitly, providing headers and content using a fluent API with `ResponseEntity`.
+If you want full control over the response and skip implicit handling, use `ResponseEntity` with its fluent API:
+
 ```java
 // with String response
 ResponseEntity<String> response = ResponseEntity.ok().contentType(MediaType.TEXT_PLAIN).body("Hello!");
@@ -99,6 +100,60 @@ ResponseEntity<String> response = ResponseEntity.ok().contentType(MediaType.TEXT
 // or with domain object response
 ResponseEntity<Account> response = ResponseEntity.ok().lastModified(order.lastModified()).body(accountObject);
 ```
+
+## WAR or JAR?
+
+If you want a Fat Jar, you need to decide which Servlet Container to use. By default, it'll be Tomcat. This is how you change it;
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-web</artifactId>
+  <exclusions>
+    <exclusion>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-jetty</artifactId>
+</dependency>
+```
+
+If you want to deploy a WAR file or even have the flexibility to do both. Remember to specify the output format in `pom.xml`:
+
+```java
+@SpringBootApplication
+public class MyApp extends SpringBootServletInitializer {
+
+  // entry point for WAR deployments
+  protected SpringApplicationBuilder configure(SpringApplicationBuilder app) {
+    return app.sources(MyApp.class);
+  }
+
+  // for CLI execution in a fat jar
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
+}
+```
+
+## Spring Boot Developer Tools
+
+Developing web apps requires frequent restarts to verify things. To make this easier on the dev, dev tools exists. They cause automatic restarts whenever a class changes (avoiding cold starts). It is automatically disabled when the apps considers itself running in production.
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-devtools</artifactId>
+  <scope>runtime</scope>
+  <optional>true</optional> <!-- prevents it from being transitively applied to other odules in the project -->
+</dependency>
+```
+
+
 
 
 
