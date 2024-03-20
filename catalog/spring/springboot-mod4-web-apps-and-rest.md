@@ -25,8 +25,6 @@ A Controller is called from a Dispatcher Servlet, which takes care of message co
 
 A controller is a POJO, annotated with the stereotype `@Controller`. You annotate handler methods with `@GetMapping`, `@PostMapping` and so on to have the Dispatcher Servlet call them.
 
-The `list()` handler method of this controller is reachable under <http://localhost:8080/accounts>.
-
 ```java
 @Controller
 public class AccountController
@@ -47,9 +45,9 @@ public class AccountController {
 }
 ```
 
-### Getting Controller Method Arguments
+### Accessing the Request Body, Headers and other Parameters
 
-Spring Web makes it very easy to get any kind of element of a request by simply mentioning them in the paramter of the method:
+Spring Web makes it very easy to get any kind of element of a request by simply mentioning them in the parameter of the method:
 
 * `Principal` is the user
 * `@RequestParam("accountId") int accountId` for query params: <http://host/account?accountId=1234>
@@ -61,11 +59,11 @@ Spring Web makes it very easy to get any kind of element of a request by simply 
 
 Example for <http://host/account?accountId=1234>:
 ```java
-@GetMapping("/accounts/")
+@GetMapping("/account")
 public Account find(@RequestParam("accountId") long accountId) { .. }
 ```
 
-With URL templating, you can access random parts of the URI. Use `{bla}` placeholders and access them with `@PathVariable("bla")`.
+With URL templating, you can access random path elements. Use `{bla}` placeholders and access them with `@PathVariable("bla")`.
 
 Example for <http://host/account/1234>
 ```java
@@ -81,13 +79,12 @@ public Account find(@PathVariable("accountId") long accountId) { .. }
 public OrderItem item(
   @PathVariable long orderId,
   @PathVariable long itemId,
-  @RequestParam(required=false) Boolean onlyIfAvailable, // null if not specified; otherwise it causes an exception
+  @RequestParam(required=false) Boolean onlyIfAvailable, // null if not specified
   Locale locale,
   Principal user) {
   // ..
 }
 ```
-
 
 ## Message Converters
 
