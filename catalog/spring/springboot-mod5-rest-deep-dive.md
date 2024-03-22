@@ -4,12 +4,18 @@ A bit of background; Jakarta EE is a set of specifications for building cloud na
 
 However, Spring MVC also offers REST support, but it's not JAX-RS compliant because both appeared at the same time, developed independently.
 
-## Controller Endpoints: `GET`, `POST`, `PUT`, `DELETE`
+## Server Side Controller Endpoints: `GET`, `POST`, `PUT`, `DELETE`
 
 ### GET endpoints (see also previous module)
 
 We already saw `@GetMapping("/api/path")`. This is syntactic sugar for `@RequestMapping(path = "/api/path", method = RequestMethod.GET)`. Note that for `HEAD`, `OPTIONS` and `TRACE`, there is no sugar and you _must_ use `@RequestMapping`.
 
+See previous module for more examples.
+
+```java
+@GetMapping("/accounts/{accountId}")
+public Account find(@PathVariable("accountId") long accountId) { .. }
+```
 
 ### PUT endpoint
 
@@ -31,7 +37,7 @@ With a POST request, the expectation is to return 201 and the `Location` header 
 The basics:
 
 ```java
-@PostMapping("/orders/{id}/items"
+@PostMapping("/orders/{id}/items")
 public ResponseEntity<Void> createItemInOrder(@PathVariable("id") long orderId,
                                               @RequestBody Item item) {
 
@@ -63,5 +69,100 @@ return ResponseEntity.created(location).build();
 ```
 
 ### Delete endpoint
+
+DELETE endpoints return 204 and an empty response.
+
+```java
+@DeleteMapping("/store/orders/{orderId}/items/{itemId}")
+@ResponseStatus(HttpStatus.NO_CONTENT)
+public void deleteItemFromOrder(@PathVariable("orderId") long orderId,
+                                @PathVariable("itemId") long itemId) {
+  // ..
+}
+```
+
+## Client Side Requests with RestTemplate
+
+Creating a `RestTemplate` is simple: `RestTemplate template = new RestTemplate();`.
+
+In Spring Boot, a auto-configured builder bean is available. Application properties such as those for Jackson are taken into account:
+
+```java
+@Autowired
+public MyClass(RestTemplateBuilder builder) {
+  this.restTemplate = builder.build();
+}
+```
+
+If you want to hide the HTTP-ness as much as possible, go with these methods:
+
+* `DELETE`: `delete(String url, Object... urlVariables)`
+* `GET`: `getForObject(String url, Class<T> responseType, Object... urlVariables)`
+* `HEAD`: `headForHeaders(String url, Object... urlVariables)`
+* `OPTIONS`: `optionsForAllow(String url, Object... urlVariables)`
+* `POST`:
+  * `postForLocation(String url, Object request, Object... urlVariables)`
+  * `postForObject(String url, Object request, Class<T> responseType, Object... urlVariables)`
+* `PUT`: `put(String url, Object request, Object... urlVariables)`
+* `PATCH`: `patchForObject(String url, Object request, Class<T> responseType, Object... urlVariables)`
+
+A mildly complex example
+```java
+RestTemplate template = new RestTemplate();
+String uri = "http://example.com/store/orders/{id}/items";
+
+// get all items for an order 1
+OrderItem[] items = template.getForObject(uri, OrderItem[].class, "1");
+
+// POST a new item in order 1 and get back the location
+OrderItem item = createItem(..);
+URI itemLocation = template.postForLocation(uri, item, "1");
+
+// PUT an update
+item.setAmount(5);
+template.put(itemLocation, item);
+
+// DELETE the item
+template.delete(itemLocation);
+```
+
+### More Controle `RequestEntity` and `ResponseEntity`
+
+Sometimes you want access to request and response headers and body. More exposure to HTTP!
+
+Request example:
+
+```java
+RequestEntity<OrderItem> request
+  = RequestEntity
+    .post(new URI(itemUrl))
+    .getHeaders().add(HttpHeaders.AUTHORIZATION, "Basic " + getToken())
+    .contentType(MediaType.APPLICATION_JSON)
+    .body(newItem);
+
+ResponseEntity<Void> response = template.exchange(request, Void.class);
+
+assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+```
+
+Response example:
+
+```java
+String uri = "http://example.com/store/otders/{id};
+
+ResponseEntity<Order> response = template.getForEntity(uri, Order.class, "1");
+assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+long modified = response.getHeaders().getLastModified();
+
+Order order = response.getBody();
+```
+
+### Isn't `RestTemplate` Deprecated? What About `WebClient`?
+
+`RestTemplate` is mature and as of Spring 5, it is deprecated. Modern use cases like streaming are not supported and it is recommended to use the non-blocking reactive `WebClient` for those cases.
+
+
+
 
 
