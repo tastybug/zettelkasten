@@ -86,10 +86,10 @@ public OrderItem item(
 }
 ```
 
-## Message Converters
+## Message Converters for XML, JSON, CSV, ...
 
 If you take in a request, the caller provides an `Accept: mimetype` header to indicate the acceptable format. In the response, the host indicates the delivered format with `Content-Type: mimetype`. This is called "Content Negotiation" and this should not have an impact on the controller logic.
-Message Converts (auto-configured by Spring Boot) take care of mapping the domain objects to these formats so that the developer does not have to do this programmatically.
+Message Converts (auto-configured by Spring Boot) take care of mapping the domain objects to these formats so that the developer does not have to do this programmatically. The message converters do their thing in the background for each return value annotated as `@ResponseBody` (or indirectly via `@RestController`).
 
 If you want full control over the response and skip implicit handling, use `ResponseEntity` with its fluent API:
 
