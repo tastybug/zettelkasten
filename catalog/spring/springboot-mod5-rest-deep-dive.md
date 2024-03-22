@@ -158,6 +158,34 @@ long modified = response.getHeaders().getLastModified();
 Order order = response.getBody();
 ```
 
+### Basic Mapping of Exceptions to Response Codes
+
+On the server side, possible error cases need to be mapped to response codes. The way to go are `@ExceptionHandler` methods (or classes).
+
+In a controller class:
+```java
+@ResponseStatus(HttpStatus.CONFLICT)
+@ExceptionHandler({ DataIntegrityViolationException.class })
+public void handleConflict(Exception ex) {
+  logger.error("Exception is: ", ex);
+  // just return empty 409
+}
+```
+
+Alternatively, you can have centralized Advice classes instead of scattered "method handlers". No need to bind this to controllers - this Advice is active everywhere.
+
+```java
+@ControllerAdvice
+public class ConflictControllerAdvice extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(value = {DataIntegrityViolationException.class})
+    protected ResponseEntity<Object> handleConflict(DataIntegrityViolationException ex, WebRequest request) {
+        return ResponseEntity.status(HttpStatus.CONFLICT.value())
+                .build();
+    }
+}
+```
+
 ### Isn't `RestTemplate` Deprecated? What About `WebClient`?
 
 `RestTemplate` is mature and as of Spring 5, it is deprecated. Modern use cases like streaming are not supported and it is recommended to use the non-blocking reactive `WebClient` for those cases.
