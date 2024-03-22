@@ -44,7 +44,7 @@ public ResponseEntity<Void> createItemInOrder(@PathVariable("id") long orderId,
   orderService.addItemToOrder(orderId, item);
 
   return ResponseEntity
-          .created(???) <- this expects the URI of the newly created resource
+          .created(uri) //<- this expects the URI of the newly created resource
           .build();
 }
 ```
