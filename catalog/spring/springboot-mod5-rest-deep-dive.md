@@ -24,7 +24,7 @@ Request bodies are handed in via `@RequestBody` - content negotiation and de-/se
 
 
 ```java
-@PutMapping("/store/orders/{id})
+@PutMapping("/store/orders/{id}")
 @ResponseStatus(HttpStatus.NO_CONTENT)
 public void updateOrder(@PathVariable("id") long orderId,
                         @RequestBody Order orderUpdate) { .. }
