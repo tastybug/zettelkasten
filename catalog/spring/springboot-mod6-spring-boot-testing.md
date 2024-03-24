@@ -47,7 +47,7 @@ public class AccountClientTest {
 }
 ```
 
-## Spring MockMVC Tests: the Unit Test of Web Layers
+## Web Slice Testing: Unit Testing Controllers with Spring MockMVC
 
 Spring MVC Testing is part of the Spring Framework, found in `spring-test.jar`.
 
@@ -63,6 +63,12 @@ public void updateAccount(@RequestBody account, @PathVariable("id") long id) {
 }
 ```
 
+The account manager is a delegate that we would mock with `@MockBean`.
+
+> @Mock vs @MockBean..
+> * `@Mock` is Mockito - you use it when Spring Context is not needed, e.g. for basic unit tests.
+> * `@MockBean` is part of Spring Boot; it creates a mock bean for those not present in the context OR replaces a bean with a mock bean when it is present
+
 Here is a test implementation:
 
 ```java
@@ -71,23 +77,34 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-@AutoConfigureMockMvc
-// @WebMvcTest replaces the upper two annotations
+// @SpringBootTest(webEnvironment = WebEnvironment.MOCK) // comes via @WebMvcTest
+// @AutoConfigureMockMvc // comes via @WebMvcTest
+@WebMvcTest(AccountController.class)
 public class AccountControllerTests {
 
   @Autowired
   MockMvc mockMvc;
 
+  @MockBean
+  private AccountManager accountManager;
+
   @Test
   public void testBasicGet() {
+    given(accountManager.getAccount(1234))
+      .willReturn(new Account("123456789", "John Doe"))
+
     mockMvc.perform(
               get("/accounts/{id}", "1234")
               .accept(MediaType.APPLICATION_JSON)
             )
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(content().contentType("application/json"));
+            .andExpect(content().contentType("application/json"))
+            .andExpect(jsonPath("name").value("John Doe"))
+            .andExpect(jsonPath("number").value("123456789"));
+
+    // redundant, but possible
+    verify(accountManager).getAccount(1234);
   }
 
   @Test
@@ -101,24 +118,12 @@ public class AccountControllerTests {
 }
 ```
 
-## Slice Testing
+## Repository Slice Testing with `@DataJpaTest`
 
-Slice testing is the testing of an slice (or port) of the application, like web layer, repository code or caching slice. Dependencies are mocked in these tests.
+Annotating a test class with `@DataJpaTest` will load only `@Repository` beans and exclude all other `@Components`. It auto-configures `TestEntityManager` and uses an in-memory database.
+All explicitly or auto-configured `DataSource`s are replaced, but with `@AutoConfigureTestDatabase`, this can be influenced.
 
-### Web Slice Testing
-
-Further up we see how MockMVC testing works. Here, the test class is annotated with `@WebMvcTest` (MockMVC and Spring Security will be auto-configured) in combination with `@MockBean` annotations for components called internally.
-
-#### `@MockBean` vs `@Mock`
-
-* `@Mock` is Mockito - you use it when Spring Context is not needed, e.g. for basic unit tests.
-* `@MockBean` is part of Spring Boot; it creates a mock bean for those not present in the context OR replaces a bean with a mock bean when it is present
-
-
-
-
-
-
+> For other use cases, there is also annotations like `@DataMongoTest`, `@DataJdbcTest`, `@DataLdapTest` and others.
 
 
 
