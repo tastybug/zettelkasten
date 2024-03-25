@@ -58,8 +58,68 @@ The library of choice to support this micrometer, which is offering Counters, Ga
 
 Micrometer uses dimensional metrics, where you can add K/V pairs, like `method:GET` and `status:200`. These metrics can thus have "high dimensionality" and even "high cardinality", if keys have many distinct values.
 
+Here are two ways to track the execution time: explicitly and implicitliy via `@Timed("metric-name")`.
+```java
+@RestController
+public class OrderController {
 
+  private Timer timer;
 
+  public class OrderController(MeterRegistry mr) {
+    this.timer = mr.timer("order.submit");
+  }
+
+  @PostMapping("/orders")
+  public Order placeOrder( ... ) {
+    # explicit timer measurement
+    return timer.record( () -> { /* logic here */ } );
+  }
+
+  @GetMapping
+  @Timed("orders.summary") // provides count, mean, max, total
+  public List<Order> orderSummary() { .. }
+}
+```
+
+Using a builder to create a metric:
+```java
+@RestController
+public class RewardController {
+  private final DistributionSummary summary;
+
+  public RewardController(MeterRegistry mr) {
+    summary = DistributionSummary.builder("reward.summary")
+                                  .baseUnit("dollars")
+                                  .register(mr);
+  }
+
+  @PostMapping("/rewards")
+  public ResponseEntity<Void> create(@RequestBody Reward reward) {
+    // DS provides: count, total, max for it's metric
+    summary.record(reward.amount());
+    /* more logic here */
+  }
+}
+```
+
+and this is how the metric looks in the endpoint:
+
+```json
+{
+  "name": "reward.summary",
+  "measurements": [
+    {
+      "statistic": "COUNT",
+      "value": 3
+    },
+    {
+      "statistic": "TOTAL",
+      "value": 10
+    },
+    ... 
+  ]
+}
+```
 
 
 
