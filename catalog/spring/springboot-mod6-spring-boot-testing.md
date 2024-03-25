@@ -109,9 +109,10 @@ public class AccountControllerTests {
 
   @Test
   public void testPut() {
+    Account account = new Account("Foo", "Bar");
     mockMvc.perform(
               put("/accounts/{id}", "1234")
-              .content("{ ... }")
+              .content(asJsonString(account))
               .contentType("application/json")
             ).andExpect(status().isNoContent());
   }
