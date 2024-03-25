@@ -121,12 +121,61 @@ and this is how the metric looks in the endpoint:
 }
 ```
 
+## Health Indicators
 
+`/actuator/health` returns a composite status indicating the health of the application. The underlying metrics are auto-configured and cover things like DB, diskspace, JMS, Mail and others. If you set `management.endpoint.health.show-details=always`, you get a detailed breakdown of all metrics that went into the health status.
 
+Whenever the endpoint is accessed, the metric values are computed, which can be costly. Or maybe you want to avoid taking certain metrics into account for the health endpoint, because you want to avoid the container scheduler from killing your application _based on certain metrics that should not be relevant for that decision_.
+To facilitate that, you can setup groups. A list of all groups can be seen under `/actuator/health`
 
+```
+# group some health indicators that k8s should take into account
+management.endpoint.health.group.myk8shealth.include=diskSpace,db
 
+# for manual access, I want to see db only
+management.endpoint.health.group.web.include=db
+management.endpoint.health.group.myk8shealth.show-details=always
+```
 
+Now you can access the group endpoint under `/actuator/health/myk8shealth` and `/actuator/health/web`
 
+### Custom Health Indicators
+
+It's easy to set up a customer health indicator. You have 2 options:
+
+* have a class extend `AbstractHealthIndicctor` and override `doHealthCheck()`, where you return a `Health` object
+* have a class implement `HealthIndicator`, override the `health()` method and return a `Health` object
+
+```java
+@Component
+public class CustomHealthCheck implements HealthIndicator {
+  @Override
+  public Health health() {
+    return Health.down().withDetail("foo", "bar").build();
+  }
+}
+```
+
+will lead to this response from the health endpoint:
+
+```json
+{
+  "status": "DOWN",
+  "details": {
+    "customHealthCheck": {
+      "status": "DOWN",
+      "details": {
+        "foo": "bar"
+      }
+    },
+    "db": {
+      "status": "UP",
+      ...
+    },
+    ...
+  }  
+}
+```
 
 
 
