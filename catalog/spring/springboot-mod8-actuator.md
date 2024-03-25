@@ -1,6 +1,6 @@
 # Actuator: Making Health Visible
 
-Actuator is a SB module that helps with observability. As per usual, it starts with this:
+Actuator is a SB module that helps with observability. As per usual, it starts with the starter dependency which brings with it `micrometer` and other transitive deps:
 
 ```xml
 <dependency>
@@ -51,6 +51,13 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
  return http.build();
 }
 ```
+
+## Setting Up Custom Metrics
+
+The library of choice to support this micrometer, which is offering Counters, Gauges, Timers and DistributionSummary in a vendor neutral way. A metric is to be registered with the auto-configured `MeterRegistry`. Custom metric names will show up in `/actuator/metrics` and can be accessed via `/actuator/metrics/my-metric`.
+
+Micrometer uses dimensional metrics, where you can add K/V pairs, like `method:GET` and `status:200`. These metrics can thus have "high dimensionality" and even "high cardinality", if keys have many distinct values.
+
 
 
 
