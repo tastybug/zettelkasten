@@ -76,7 +76,14 @@ public class SecurityConfig {
 
 ## AuthN: Basic Auth
 
-As a web request comes in, it passes `BasicAuthenticationFilter`. If `Authorization: Basic <base64 of user:password>` is present, the filter places an `Authentication` object in the security context - the authentication object is _not_ authenticated yet. Then an `AuthenticationManager` will check the `Authorization` object by delegating to a `AuthenticationProvider` (e.g. `OpenIDAuthenticationProvider`), ultimately finishing the AuthN. With this being done, the Authorities of the Principal are clear and are added to the `Authentication` object.
+![AuthN Flow Diagram](./authentication-flow.jpg)
+
+As a web request comes in, it passes `BasicAuthenticationFilter`. If `Authorization: Basic <base64 of user:password>` is present, the filter places an `Authentication` object in the security context. This `Authentication` object has a type, reflecting how it was obtained. At this point, no authN has happened.
+
+The filter will then call the `AuthenticationManager`, which is a coordinator across one or more `AuthenticationProvider` - one for each kind of authentication scheme that you want to support. The provider has 2 functions: `supports(token)` and `authenticate(token)`.
+
+
+
 At this point, authN is done and we have a `Authentication` object in the security context having:
 * `Authenticated: true/false`
 * `Authorities: list of roles`
@@ -156,8 +163,6 @@ public void accountDetails_accessible() throws Exception {
   // ..
 }
 ```
-
-
 
 ### On Password Hashing
 
