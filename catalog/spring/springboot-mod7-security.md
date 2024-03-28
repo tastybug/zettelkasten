@@ -119,6 +119,27 @@ public UserDetailsManager userDetailsManager(DataSource dataSource) {
 }
 ```
 
+### AuthN in MockMVC
+
+MockMVC takes the real SecurityFilterChain into account, because you want to test that your security rules work as expected. But MockMVC takes the burden of Authentication away by populating the security context with `Authentication` objects as needed. That's why you don't have to make a `Authorization` header part of your request.
+
+This here will pretend that Authentication has happened and a Principal is in the security context with the given role.
+
+```java
+@Test
+@WithMockUser( roles = {"USER"}) // a user with this role will be in the sec context
+public void accountDetails_with_USER_role_should_return_200() throws Exception {
+  // ...
+}
+```
+
+You can set a username and password, if that's somehow relevant for the application code, e.g. because you want to log the principal's name. The critical piece is the `roles` attribute, because that is relevant for the security filter chain (b/c roles on URLs).
+```java
+@Test
+@WithMockUser(username = "user", password = "user", roles = {"USER"})
+public void accountDetails_with_user_credentials_should_return_200() throws Exception {
+```
+
 ### On Password Hashing
 
 Passwords are supposed to be hashed instead of stored in plain text. Hashing algorithms sometimes get deprecated and replaced and this will be true for the future: your service will use a hashing alg that will be deprecated at some point.
