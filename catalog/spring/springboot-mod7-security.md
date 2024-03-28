@@ -22,6 +22,14 @@ Spring security uses a chain of filters ("SecurityFilterChain") to perform authN
 
 ## Default Security Setup
 
+It starts with adding a starter dependency:
+```java
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+
 By default, a single user called "user" is set up. A password is generated for "user" and logged to stdout during boot. All URLs required a logged in user. Logging in is either done with BasicAuth or FormLogin, depending on the content negotiation.
 
 ## URL AuthZ
