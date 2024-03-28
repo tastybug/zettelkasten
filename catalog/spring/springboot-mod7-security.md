@@ -66,9 +66,47 @@ public class SecurityConfig {
 }
 ```
 
+## AuthN: Basic Auth
 
+As a web request comes in, it passes `BasicAuthenticationFilter`. If `Authorization: Basic <base64 of user:password>` is present, the filter places an `Authentication` object in the security context - the authentication object is _not_ authenticated yet. Then an `AuthenticationManager` will check the `Authorization` object by delegating to a `AuthenticationProvider` (e.g. `OpenIDAuthenticationProvider`), ultimately finishing the AuthN. With this being done, the Authorities of the Principal are clear and are added to the `Authentication` object.
+At this point, authN is done and we have a `Authentication` object in the security context having:
+* `Authenticated: true/false`
+* `Authorities: list of roles`
 
+There are a number of out-of-the-box `AuthenticationProviders`:
 
+* `DaoAuthenticationProvider`
+* `LdapAuthenticationProvider`
+* `OpenIDAuthenticationProvider`
+* `RememberMeAuthenticationProvider`
+* etc
+
+The `DaoAuthenticationProvider` takes data from a `UserDetailService` bean, of which there are:
+* `InMemoryUserDetailsManager`
+* `JdbcUserDetailsManager`
+* `LdapUserDetailsManager`
+
+So as soon as a `UserDetailsManager` bean is declared, it will be auto-configure into a `DaoAuthenticationManager` and used.
+
+In memory for testing purposes:
+```java
+@Bean
+public InMemoryUserDetailsManager userDetailsService() {
+  UserDetails user = User.withUsername("user").password(passwordEncoder.encode("user")).roles("USER").build();
+  UserDetails admin = User.withUsername("admin").password(passwordEncoder.encode("admin")).roles("ADMIN").build();
+
+  return new InMemoryUserDetailsManager(user, admin);
+}
+```
+
+Database lookup is also possible. This will run `SELECT username, password, enabled FROM users WHERE username = ?` (check documentation for group support):
+
+``` java
+@Bean
+public UserDetailsManager userDetailsManager(DataSource dataSource) {
+  return new JdbcUserDetailsManager(dataSource);
+}
+```
 
 
 
