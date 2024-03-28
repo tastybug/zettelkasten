@@ -123,22 +123,41 @@ public UserDetailsManager userDetailsManager(DataSource dataSource) {
 
 MockMVC takes the real SecurityFilterChain into account, because you want to test that your security rules work as expected. But MockMVC takes the burden of Authentication away by populating the security context with `Authentication` objects as needed. That's why you don't have to make a `Authorization` header part of your request.
 
-This here will pretend that Authentication has happened and a Principal is in the security context with the given role.
-
-```java
-@Test
-@WithMockUser( roles = {"USER"}) // a user with this role will be in the sec context
-public void accountDetails_with_USER_role_should_return_200() throws Exception {
-  // ...
-}
-```
-
-You can set a username and password, if that's somehow relevant for the application code, e.g. because you want to log the principal's name. The critical piece is the `roles` attribute, because that is relevant for the security filter chain (b/c roles on URLs).
+You can set a username and password, if that's somehow relevant for the application code, e.g. because you want to log the principal's name or there is method security. The `roles` attribute is critical for the security filter chain (b/c roles on URLs).
 ```java
 @Test
 @WithMockUser(username = "user", password = "user", roles = {"USER"})
 public void accountDetails_with_user_credentials_should_return_200() throws Exception {
 ```
+
+#### Custom UserDetailsService
+
+If you have a custom `UserDetailsService` (those return UserDetails by name) that you want to rely on, you can do this:
+
+```java
+@Component
+public class CustomUserDetailsService implements UserDetailsService {
+  @Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User.UserBuilder builder = User.builder();
+     builder.username(username);
+     builder.password(passwordEncoder.encode(username));
+     builder.roles("USER");
+     return builder.build();
+	}
+}
+```
+
+And in your MockMVC test:
+```java
+@Test
+@WithUserDetails("joe")
+public void accountDetails_accessible() throws Exception {
+  // ..
+}
+```
+
+
 
 ### On Password Hashing
 
