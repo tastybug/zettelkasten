@@ -92,6 +92,9 @@ In memory for testing purposes:
 ```java
 @Bean
 public InMemoryUserDetailsManager userDetailsService() {
+  // see below for more details
+  PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatinPasswordEncoder();
+
   UserDetails user = User.withUsername("user").password(passwordEncoder.encode("user")).roles("USER").build();
   UserDetails admin = User.withUsername("admin").password(passwordEncoder.encode("admin")).roles("ADMIN").build();
 
@@ -99,7 +102,7 @@ public InMemoryUserDetailsManager userDetailsService() {
 }
 ```
 
-Database lookup is also possible. This will run `SELECT username, password, enabled FROM users WHERE username = ?` (check documentation for group support):
+Database lookup is also possible. This will run `SELECT username, password, enabled FROM users WHERE username = ?` unless configured otherwise (check documentation for group support):
 
 ``` java
 @Bean
@@ -108,5 +111,53 @@ public UserDetailsManager userDetailsManager(DataSource dataSource) {
 }
 ```
 
+### On Password Hashing
 
+Passwords are supposed to be hashed instead of stored in plain text. Hashing algorithms sometimes get deprecated and replaced and this will be true for the future: your service will use a hashing alg that will be deprecated at some point.
+Spring Security supports having different hashing strategies in place at the same time, so that your old old admin account can still log in after years.
+
+The `PasswordEncoder` produces a string containing the hash, the salt, the alg and maybe more depending on the alg: `(bcrypt) lasdjkhasjdajksdhakjshdkajhdkjashdkjahsd`. This will be stored and compared against with the provided password. When the `PasswordEncoder` checks the target hash, it knows how to hash the given password.
+
+By default, `bcrypt` is used:
+```java
+PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatinPasswordEncoder();
+passwordEncoder.encode("user")
+```
+
+### Adding AuthN to the `SecurityFilterChain`
+
+For basic auth:
+
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  // configure the chain here
+  http.authorizeHttpRequests((authz) -> authz
+        .requestMatchers( ... )
+        .anyRequest().authenticated());
+      .httpBasic(withDefaults()); // enables basic auth
+  return http.build();
+}
+```
+
+For form login:
+
+```java
+@Bean
+public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  // configure the chain here
+  http.authorizeHttpRequests((authz) -> authz
+        .requestMatchers( ... )
+        .anyRequest().authenticated());
+      .formLogin(form -> form
+        .loginPage("/login")
+        .permitAll()
+      )
+      .logout(logout -> logout
+        .logoutSuccessUrl("/home")
+        .permitAll()
+      );
+  return http.build();
+}
+```
 
