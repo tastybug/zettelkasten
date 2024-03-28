@@ -78,6 +78,8 @@ public class SecurityConfig {
 
 ![AuthN Flow Diagram](./authentication-flow.jpg)
 
+(Excellent tutorial around this and JWT [here](https://www.toptal.com/spring/spring-security-tutorial)).
+
 As a web request comes in, it passes security filters like `BasicAuthenticationFilter`. If `Authorization: Basic <base64 of user:password>` is present, the filter places a scheme specific `Authentication` object in the security context.
 
 The filter will then call the `AuthenticationManager`, which is a coordinator across one or more `AuthenticationProvider` - one for each kind of authentication scheme that you want to support. The provider itself has just 2 functions: `supports(scheme)` and `authenticate(token)`.
@@ -111,7 +113,7 @@ You can set a username and password, if that's somehow relevant for the applicat
 ```java
 @Test
 @WithMockUser(username = "user", password = "user", roles = {"USER"})
-public void accountDetails_with_user_credentials_should_return_200() throws Exception {
+public void accountDetails_with_user_credentials_should_return_200() throws Exception {}
 ```
 
 #### Custom UserDetailsService
@@ -121,13 +123,13 @@ If you have a custom `UserDetailsService` (those return UserDetails by name) tha
 ```java
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
-  @Override
+	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User.UserBuilder builder = User.builder();
-     builder.username(username);
-     builder.password(passwordEncoder.encode(username));
-     builder.roles("USER");
-     return builder.build();
+		builder.username(username);
+		builder.password(passwordEncoder.encode(username));
+		builder.roles("USER");
+		return builder.build();
 	}
 }
 ```
