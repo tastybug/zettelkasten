@@ -28,13 +28,8 @@ There is a difference between being enabled and being exposed. Enabled means, th
 Exposed otoh means that you can reach the endpoint via HTTP or JMX. JMX exposure is only given when `spring.jmx.enabled=true` is set. HTTP is only available when Spring MVC, WebFlux or Jersey is used. In addition to this, you need to declare which endpoints you want to be exposed (by default, only `health` is exposed):
 
 ```yaml
-# 
-management:
- endpoints:
-   web:
-     exposure:
-       # by default, only health is exposed
-       include:health,beans,env,info
+# by default, only health is exposed
+management.endpoints.web.exposure.include:health,beans,env,info
 ```
 
 ## Securing Actuator Endpoints with Spring Security
