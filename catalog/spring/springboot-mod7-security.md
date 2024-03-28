@@ -114,6 +114,10 @@ You can set a username and password, if that's somehow relevant for the applicat
 @Test
 @WithMockUser(username = "user", password = "user", roles = {"USER"})
 public void accountDetails_with_user_credentials_should_return_200() throws Exception {}
+
+@Test
+@WithAnonymousUser
+public void accountDetails_with_anon_returns_401() throws Exception {}
 ```
 
 #### Custom UserDetailsService
