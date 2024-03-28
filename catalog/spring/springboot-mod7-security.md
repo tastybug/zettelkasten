@@ -78,32 +78,18 @@ public class SecurityConfig {
 
 ![AuthN Flow Diagram](./authentication-flow.jpg)
 
-As a web request comes in, it passes `BasicAuthenticationFilter`. If `Authorization: Basic <base64 of user:password>` is present, the filter places an `Authentication` object in the security context. This `Authentication` object has a type, reflecting how it was obtained. At this point, no authN has happened.
+As a web request comes in, it passes security filters like `BasicAuthenticationFilter`. If `Authorization: Basic <base64 of user:password>` is present, the filter places a scheme specific `Authentication` object in the security context.
 
-The filter will then call the `AuthenticationManager`, which is a coordinator across one or more `AuthenticationProvider` - one for each kind of authentication scheme that you want to support. The provider has 2 functions: `supports(token)` and `authenticate(token)`.
+The filter will then call the `AuthenticationManager`, which is a coordinator across one or more `AuthenticationProvider` - one for each kind of authentication scheme that you want to support. The provider itself has just 2 functions: `supports(scheme)` and `authenticate(token)`.
 
+An important `AuthenticationProvider` implementation is `DaoAuthenticationProvider`, which gets user details from a `UserDetailsService`. Other common providers are `LdapAuthenticationProvider` and `OpenIDAuthenticationProvider`.
 
+The `UserDetailsService` is a very simple interface that only offers `loadUserByUsername(name)`, which then loads user specific information from some source, e.g. a database. Common types are: `InMemoryUserDetailsManager`, `JdbcUserDetailsManager`, `LdapUserDetailsManager`.
 
-At this point, authN is done and we have a `Authentication` object in the security context having:
-* `Authenticated: true/false`
-* `Authorities: list of roles`
+> All this is subject to auto-configuration. If you declare e.g. a UserDetailsService bean, it'll be plugged in.
 
-There are a number of out-of-the-box `AuthenticationProviders`:
+An in-memory `UserDetailsManager`:
 
-* `DaoAuthenticationProvider`
-* `LdapAuthenticationProvider`
-* `OpenIDAuthenticationProvider`
-* `RememberMeAuthenticationProvider`
-* etc
-
-The `DaoAuthenticationProvider` takes data from a `UserDetailService` bean, of which there are:
-* `InMemoryUserDetailsManager`
-* `JdbcUserDetailsManager`
-* `LdapUserDetailsManager`
-
-So as soon as a `UserDetailsManager` bean is declared, it will be auto-configure into a `DaoAuthenticationManager` and used.
-
-In memory for testing purposes:
 ```java
 @Bean
 public InMemoryUserDetailsManager userDetailsService() {
@@ -114,15 +100,6 @@ public InMemoryUserDetailsManager userDetailsService() {
   UserDetails admin = User.withUsername("admin").password(passwordEncoder.encode("admin")).roles("ADMIN").build();
 
   return new InMemoryUserDetailsManager(user, admin);
-}
-```
-
-Database lookup is also possible. This will run `SELECT username, password, enabled FROM users WHERE username = ?` unless configured otherwise (check documentation for group support):
-
-``` java
-@Bean
-public UserDetailsManager userDetailsManager(DataSource dataSource) {
-  return new JdbcUserDetailsManager(dataSource);
 }
 ```
 
