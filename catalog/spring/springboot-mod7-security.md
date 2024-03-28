@@ -154,10 +154,44 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         .permitAll()
       )
       .logout(logout -> logout
-        .logoutSuccessUrl("/home")
+        .logoutSuccessUrl("/home") // default: /login?logout
         .permitAll()
       );
   return http.build();
 }
 ```
+
+A form login page:
+
+```html
+<form action="/login" method="POST">
+  <input type="text" name="username"/>
+  <br/>
+  <input type="password" name="password"/>
+  <br/>
+  <input type="submit" name="submit" value="LOGIN"/>  
+</form>
+```
+
+## Method Security
+
+Security is not necessarily limited to endpoints and URL, it can span to methods inside the application. Best practice is to enforce authZ on the SERVICE layer, not below, not above. During Code Reviews, make sure that programmatic access does not bypass services.
+Spring Security uses AOP for this and annotations can be either Spring's own or JSR-250.
+
+It starts with:
+```java
+@EnableMethodSecurity
+```
+Example:
+```java
+public class ItemManager {
+  // members can access their own order items here
+  @PreAuthorize("hasRole('MEMBER') && #order.owner.name == principal.username")
+  public Item findItem(Order order, login itemNumber) {
+    // ..
+  }
+}
+```
+
+
 
