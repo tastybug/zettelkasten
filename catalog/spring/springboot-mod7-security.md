@@ -69,7 +69,7 @@ public class SecurityConfig {
 
   @Bean
   public InMemoryUserDetailsService userDetailsService() {
-    // configure the AuthenticationManager
+    // return an in-mem user details service
   }
 }
 ```
