@@ -26,7 +26,7 @@ __Without Spring Boot__, this is what would have to be configured to make it wor
 @Bean
 public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
 
-  HibernateJoaVendorAdapter adapter = new HibernateJoaVendorAdapter();
+  HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
   adapter.setShowSql(true);
   adapter.setGenerateDdl(true);
   adapter.setDatabase(Database.HSQL);
