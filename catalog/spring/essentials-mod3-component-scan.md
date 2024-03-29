@@ -63,7 +63,7 @@ You can also wire in configuration values via `@Value`.
 @Component
 public OuterClass {
 
- @Value("${user.region"}
+ @Value("${user.region"})
  private String userRegion;
 
  public OuterClass(@Value("${user.region"} String userRegion) {
