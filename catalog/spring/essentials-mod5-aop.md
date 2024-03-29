@@ -77,7 +77,7 @@ An example:
 
 ```
 execution(* rewards.restaurant.*Service.find*(..))
-^ desginator
+^ designator
           ^ return type
             ^ package
                                ^ class
@@ -87,7 +87,7 @@ execution(* rewards.restaurant.*Service.find*(..))
 
 #### More examples
 
-1. `execution(void send*(rewards.Dining))`: any method starting with `send` that has a single `Dinging` argument and returns void. Note here the use of fully-qualified class names, which is required for non-basic types.
+1. `execution(void send*(rewards.Dining))`: any method starting with `send` that has a single `Dining` argument and returns void. Note here the use of fully-qualified class names, which is required for non-basic types.
 2. `execution(* send(*))`: any `send` method with a single parameter and any kind of return value.
 3. `execution(* send(int, ..))`: any `send` method with a first parameter of type `int` and zero or many further parameters, returning any kind of return value.
 4. `execution(void example.MessageServiceImpl.*(..))`: any method in class `MessageServiceImpl` (or subclasses!) with any number of parameters and a `void` return type.
