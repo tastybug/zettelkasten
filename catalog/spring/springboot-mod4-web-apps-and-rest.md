@@ -192,7 +192,7 @@ public class RewardController {
     this.lookupService = lookupService;
   }
 
-  @GetMapping("/rewards/{id})
+  @GetMapping("/rewards/{id}")
   public Reward show(@PathVariable("id") long id) {
     return lookupService.lookupReward(id);
   }
