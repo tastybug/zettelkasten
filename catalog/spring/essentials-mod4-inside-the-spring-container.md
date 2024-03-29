@@ -10,7 +10,7 @@ The Spring container goes through 3 phases:
 
 ## Init Phase
 
-This kicks off when `SpringApplication.run(AppConfig.class` is executed. Here, the Bean definitions (e.g. annotations) are loaded and then the Beans are created in the necessary order according to the configured dependency graph. All this is done in the `BeanFactory`, which happens to be the `ApplicationContext`.
+This kicks off when `SpringApplication.run(AppConfig.class)` is executed. Here, the Bean definitions (e.g. annotations) are loaded and then the Beans are created in the necessary order according to the configured dependency graph. All this is done in the `BeanFactory`, which happens to be the `ApplicationContext`.
 This init phase comes with extension points that give you means to change things programmatically.
 
 
