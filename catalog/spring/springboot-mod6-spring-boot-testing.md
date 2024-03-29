@@ -24,7 +24,7 @@ public class AccountClientTest {
   private TestRestTemplate restTemplate; // this will know the random port
 
   @Test
-  piublic void addAndDeleteBeneficiary() {
+  public void addAndDeleteBeneficiary() {
     // given: a newly created benficiary
     String addPath = "/accounts/{accountId}/beneficiaries";
     URI newLocation = restTemplate.postForLocation(addPath, "David", "1");
