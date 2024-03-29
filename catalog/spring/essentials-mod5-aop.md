@@ -1,21 +1,13 @@
 # Introduction to Aspect Oriented Programming
 
-Applications have cross-cutting concerns: logging, security, transaction handling and so on. Instead of implemting a concern in multiple places (code duplication) and weaving multiple concerns together (biz logic + logging + security), there is AOP. There are 2 approaches to it:
+Applications have cross-cutting concerns: logging, security, transaction handling and so on. Instead of implementing a concern in multiple places (code duplication) and weaving multiple concerns together (biz logic + logging + security), there is AOP. There are 2 approaches to it:
 
 * **AspectJ**: the original, it's a full-blown language; uses bytecode modification for aspect weaving
 * **Spring AOP**: a Java based framework with AspectJ integration; uses Proxies for weaving; it focusses on enterprise problems
 
-This document concentrates on Spring AOP.
+An Aspect covers a concern: there can be a shared "Security Aspect", a "Transaction Aspect", a "Logging Aspect". The Aspect defines a WHERE and a WHAT: WHERE it contributes and WHAT code is to be run.
 
-> An Aspect covers a concern: there can be a shared "Security Aspect", a "Transaction Aspect", a "Logging Aspect". The Aspect defines a WHERE and a WHAT: WHERE it contributes and WHAT code is to be run.
-
-## Core Concepts
-
-* __Join Point__ is a point in the execution of a program: a method call, a exception thrown.
-* __Pointcut__ is an expression that selects one or more Join Points.
-* __Advice__ is code that is to be executed at each selected Join Point.
-* __Aspect__ a "module" that encapsulates pointcuts and advice.
-* __Weaving__ is the technique of combining main code with aspects
+![Building Blocks Visualized](./aop-building-blocks.jpg)
 
 ## Basics of Spring Integration
 
