@@ -103,7 +103,7 @@ There are different types of Advices:
 
 * `@Before`: the proxy will call the advice before calling the method. If the advice fails, the target method will not be called.
 * `@After`: execution happens after target, irregardless of whether it was a success or not.
-* `@AfterReturning`: the target is called first and if it's __NOT throwing an exception__, the Advice is executed. Note that the type of `@AfterReturningAdvice(returning="xyz")` as given in the Advice's method signature is an filter additional to the `execution` pattern! See example below.
+* `@AfterReturning`: the target is called first and if it's __NOT throwing an exception__, the Advice is executed. Note that the type of `@AfterReturning(returning="xyz")` as given in the Advice's method signature is an filter additional to the `execution` pattern! See example below.
 * `@AfterThrowing`: the target is called first and if an exception is thrown, the Advice is executed. The exception will keep propagating as it is, but you can throw a different type of exception.
 * `@Around`: the most flexible Advice, it's like a proxy! The Aspect delegates only to the Advice and it is up to the Advice to call the target (or not) and handle the return/exception. Look at the neat example where the Aspect implements caching!
 
