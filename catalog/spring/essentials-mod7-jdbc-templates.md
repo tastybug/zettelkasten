@@ -1,6 +1,6 @@
 # JDBC Templates
 
-`JdbcTemplates` are threat safe and reusable. They hide a lot complexity behind a clean abstraction. Exceptions will be thrown out of it. Custom behaviour can be wired in.
+`JdbcTemplates` are thread safe and reusable. They hide a lot complexity behind a clean abstraction. Exceptions will be thrown out of it. Custom behaviour can be wired in.
 
 ## Problems with Plain JDBC
 
