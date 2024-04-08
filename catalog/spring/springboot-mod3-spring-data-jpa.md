@@ -155,7 +155,7 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
   public List<Customer> findByOrderDateLessThan(Date someDate);
   public List<Customer> findByOrderDateBetween(Date d1, Date d2);
 
-  @Query("SELECT c FROM Customer c WHERE c.emailAddress = ?1) // ?1 maps to first parameter
+  @Query("SELECT c FROM Customer c WHERE c.emailAddress = ?1") // ?1 maps to first parameter
   Customer findByEmail(String email);
 
   // this is the query language of the underlying db; here it's JPQL/"Java Persistence Query Language"
