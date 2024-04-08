@@ -31,7 +31,7 @@ Composite annotations to make life easier: `@SpringJUnitConfig(SystemTestConfig.
 You can use `@SpringJUnitConfig` without specifying the configuration. The SpringRunner will look for locally declared configuration in the test class then.
 
 ```
-@SprungJUnitConfig
+@SpringJUnitConfig
 public class JdbcAccountRepoTest {
 
   @Test
