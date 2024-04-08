@@ -28,7 +28,7 @@ It integrates into Maven (or Gradle) like this:
   <!-- this pulls in spring-test-*.jar, junit, mockito, assertJ, .. -->
   <dependency>
     <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter</artifactId>
+    <artifactId>spring-boot-starter-test</artifactId>
     <!-- no version, this is defined in parent -->
     <scope>test</scope>
   </dependency>
