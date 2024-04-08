@@ -117,10 +117,9 @@ public List<Map<String, Object>> getPersons() {
 Usually you want to map the `ResultSet` into your `Account`, `Person` or whatever domain object there is. You can do this programmatically, avoiding ORM layers where the data model is simple.
 
 There are 3 constructs to for mapping purposes, each of which you likely use in form of a lambda:
-* `RowMapper: (resultset, rownum) -> {return 1 line mapped}`
-* `ResultSetExtractor: (resultset) -> { return aggregate}`
-* (`RowCallbackHandler` not investigated here)
-
+* `RowMapper: (resultset, rownum) -> {return 1 line mapped}` is row based and returns a mapped type
+* `RowCallbackHandler` is also row based, but does not return something; the handler is likely a stateful delegate
+* `ResultSetExtractor: (resultset) -> { return aggregate}` processes the full `ResultSet`, returning an aggregate
 
 Mapping a single result using `RowMapper`:
 ```java
