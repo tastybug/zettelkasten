@@ -15,10 +15,10 @@ $ TO=John FROM=Jane envsubst < template.txt
 
 Without template file, with piping right into `envsubst`:
 ```
-$ echo "Hello $TO" | envsubst
+$ echo "Hi $TO" | envsubst
 > Hi
 $ export TO=Phil
-$ echo "Hello $TO" | envsubst
+$ echo "Hi $TO" | envsubst
 > Hi Phil
 ```
 
