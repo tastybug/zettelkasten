@@ -1,14 +1,16 @@
 # Platforming
 
-## One IT Platform Classification 
+## McKinsey's Platform Classification 
 
-* customer journey platform: reusable elements impacting customer experience (UI widgets?)
-* business capability platforms: reusable featues, e.g. payment, identity, inventory management
-* Core IT platforms: infrastructure platforms (AWS IaaS), developer platforms on top of infra platforms; shared technology on which journeys and biz capability platforms run; concretely deployment automation, cloud infra and data analytics environments.
+[source](https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-platform-play-how-to-operate-like-a-tech-company)
 
-## Thoughtworks' Platform Classifications
+* _Customer Journey Platform_: reusable elements impacting customer experience (UI widgets?)
+* _Business Capability Platforms_: reusable featues, e.g. payment, identity, inventory management
+* _Core IT Platforms_: infrastructure platforms (AWS IaaS), developer platforms on top of infra platforms; shared technology on which journeys and biz capability platforms run; concretely deployment automation, cloud infra and data analytics environments.
 
-See this [article](https://www.thoughtworks.com/en-de/insights/blog/platform-tech-strategy-three-layers).
+## Thoughtworks' Platform Classification
+
+[source](https://www.thoughtworks.com/en-de/insights/blog/platform-tech-strategy-three-layers)
 
 Platforms centralize expertise and decentralize innovation. Commoditization of services, that is open to extension.
 There are distinct types, or layers, of Platform which achieve different goals and have different audiences:
