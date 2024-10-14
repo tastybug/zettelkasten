@@ -1,6 +1,8 @@
 # Platforming
 
-## McKinsey's Platform Classification 
+## What Are We Aiming For?
+
+### McKinsey's Platform Classification 
 
 [source](https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-platform-play-how-to-operate-like-a-tech-company)
 
@@ -8,7 +10,7 @@
 * _Business Capability Platforms_: reusable featues, e.g. payment, identity, inventory management
 * _Core IT Platforms_: infrastructure platforms (AWS IaaS), developer platforms on top of infra platforms; shared technology on which journeys and biz capability platforms run; concretely deployment automation, cloud infra and data analytics environments.
 
-## Thoughtworks' Platform Classification
+### Thoughtworks' Platform Classification
 
 [source](https://www.thoughtworks.com/en-de/insights/blog/platform-tech-strategy-three-layers)
 
@@ -23,8 +25,7 @@ This is how I understand it, using Amazon as an example:
 
 ![thoughtworks-model](https://github.com/user-attachments/assets/37966fb1-586e-499f-a817-9a1132ba0c01)
 
-
-## Possible Goals 
+### Possible Goals 
 
 * Reduce cost: allow orgs to reuse IT assets across a wide range of use cases, reducing cost of new development
 * Increase velocity: reuse also accelerates new development and experimentation - you stand on top of a platform. Automated processes and delivery pieplines reduce friction.
@@ -32,3 +33,13 @@ This is how I understand it, using Amazon as an example:
 * Improve transparency: transparency into applications running in the platform, e.g. resource consumption, error rates, patch levels
 * Reduced lock-in: platform can act as an abstraction layer over external tools, reducing direct depenencies
 * Reliability: we don't want to pay for stuff that's not working; customers don't appreciate bugs and outages. Achivable through k8s, improved alerting (part of transparency)
+
+### Common Blueprint
+
+![common-blueprint](https://github.com/user-attachments/assets/b71e6c92-ee09-4c2c-82e5-7c8bf48d2fb8)
+
+## Setting Expectations
+
+> Embarking on a digital platform initiative must be guided by a clear roadmap with intermediate deliverables and the values achieved.
+
+Can we plot a value delivery chart?
