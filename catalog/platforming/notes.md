@@ -10,7 +10,17 @@
 
 See this [article](https://www.thoughtworks.com/en-de/insights/blog/platform-tech-strategy-three-layers).
 
-* 
+Platforms centralize expertise and decentralize innovation. Commoditization of services, that is open to extension.
+There are distinct types, or layers, of Platform which achieve different goals and have different audiences:
+
+1. _Offering/Service Platform_: what most non-technologists mean when talking about Platforms. This means business capabilities platforms like eCom, logistics. Uber's services for drivers seems to match too.
+2. _Digital Business Platform_: a programmatic interface (API) to a service platform. Someone writing an alternative mobile client for Uber services would connect here. Such an API can be powerful if it's public and dog-fooding happens from the internal teams. Bezos: "all service interfaces, without exception, must be designed .. to be able to expose the interface to developers in the outside world. No exceptions!".
+3. Foundational Technology Platform: treating infrastructure as a sharable platform. Make it easy to use this with deep expertise. 
+
+This is how I understand it, using Amazon as an example:
+
+![thoughtworks-model](https://github.com/user-attachments/assets/37966fb1-586e-499f-a817-9a1132ba0c01)
+
 
 ## Possible Goals 
 
