@@ -49,3 +49,14 @@ Can we plot a value delivery chart?
 Ready to use pieces:
 * <https://www.crossplane.io/registries>
 * <https://backstage.io/>
+
+## Past Org Setups
+
+### eBay
+
+SRE: vault, on call
+Platform: k8s, mesh, identity (keycloak)
+
+### Wayfair
+
+Platform: maven poms, buildkite, TFE, Eureka, Backstage, Jazz/Mokka
