@@ -38,10 +38,14 @@ This is how I understand it, using Amazon as an example:
 
 ![common-blueprint](https://github.com/user-attachments/assets/b71e6c92-ee09-4c2c-82e5-7c8bf48d2fb8)
 
-
-
 ## Setting Expectations
 
 > Embarking on a digital platform initiative must be guided by a clear roadmap with intermediate deliverables and the values achieved.
 
 Can we plot a value delivery chart?
+
+# Implementations
+
+Ready to use pieces:
+* <https://www.crossplane.io/registries>
+* <https://backstage.io/>
