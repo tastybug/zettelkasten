@@ -50,6 +50,10 @@ Ready to use pieces:
 * <https://www.crossplane.io/registries>
 * <https://backstage.io/>
 
+## Anatomy
+
+![Anatomy](./platform anatomy.jpg)
+
 ## Past Org Setups
 
 ### eBay

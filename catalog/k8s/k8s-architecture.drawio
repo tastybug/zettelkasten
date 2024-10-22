@@ -1,6 +1,6 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
   <diagram name="Page-1" id="a_fS3BVPdOIHquYhCw5D">
-    <mxGraphModel dx="2346" dy="1452" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1941" dy="1017" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -81,22 +81,22 @@
         <mxCell id="xmh-3r6vrebCy1V5YOEd-1" value="runc" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="260" y="600" width="56" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="bk_CIf8C-RDV3xLgjNTA-1" value="context" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="bk_CIf8C-RDV3xLgjNTA-1" value="context" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-660" y="455" width="240" height="270" as="geometry" />
         </mxCell>
-        <mxCell id="bk_CIf8C-RDV3xLgjNTA-2" value="cluster" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="bk_CIf8C-RDV3xLgjNTA-2" value="cluster" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-630" y="605" width="90" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="bk_CIf8C-RDV3xLgjNTA-3" value="user" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="bk_CIf8C-RDV3xLgjNTA-3" value="user" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-530" y="605" width="90" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="bk_CIf8C-RDV3xLgjNTA-4" value="namespace&lt;div&gt;(opt)&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="bk_CIf8C-RDV3xLgjNTA-4" value="namespace&lt;div&gt;(opt)&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-600" y="485" width="120" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="bk_CIf8C-RDV3xLgjNTA-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" edge="1" parent="1" source="bk_CIf8C-RDV3xLgjNTA-5" target="fWa_hwFtwptlqF4OvhhL-5">
+        <mxCell id="bk_CIf8C-RDV3xLgjNTA-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;curved=1;" parent="1" source="bk_CIf8C-RDV3xLgjNTA-5" target="fWa_hwFtwptlqF4OvhhL-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="bk_CIf8C-RDV3xLgjNTA-5" value="kubectl&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 7px;&quot;&gt;&lt;i&gt;kube-apiserver client&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 7px;&quot;&gt;&lt;i&gt;~/.kube/config&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="bk_CIf8C-RDV3xLgjNTA-5" value="kubectl&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 7px;&quot;&gt;&lt;i&gt;kube-apiserver client&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;font style=&quot;font-size: 7px;&quot;&gt;&lt;i&gt;~/.kube/config&lt;/i&gt;&lt;/font&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="-470" y="237.5" width="150" height="70" as="geometry" />
         </mxCell>
       </root>

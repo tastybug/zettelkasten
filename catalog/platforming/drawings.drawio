@@ -1,0 +1,121 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="Page-1" id="JIXi9df82yWAS85UGSbj">
+    <mxGraphModel dx="794" dy="1374" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cYr1B52apxmAPbhfWzlL-1" value="Management Plane&lt;div&gt;(Request Changes Here)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="10" y="450" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-2" value="Control Plane&lt;div&gt;(Make Changes Happen)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="10" y="520" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-3" value="Services Plane&lt;div&gt;(Changes Appy Here)&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="10" y="590" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="199" y="450" width="181" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-6" value="K8S" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="257" y="670" width="123" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-7" value="kubectl" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="460" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-9" value="argoCD" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="270" y="460" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-10" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="199" y="520" width="181" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-11" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="199" y="590" width="181" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-12" value="k8s control plane kube-apiserver, ..." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="530" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-14" value="kubelet" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="600" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-15" value="kube-proxy" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="600" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-16" value="helm" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="330" y="460" width="40" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-17" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="400" y="450" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-18" value="TF monolith" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="411" y="460" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-19" value="Vault UI" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="471" y="460" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-20" value="Jenkinsfile" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="531" y="460" width="69" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-21" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="400" y="520" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-22" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="400" y="590" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-24" value="GCP" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="600" width="39" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-25" value="Jenkins" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="461" y="600" width="49" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-28" value="MoVe" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="453.5" y="670" width="123" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-29" value="Atlantis" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="411" y="530" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-30" value="Vault" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="600" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-32" value="K8S" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="576.5" y="600" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-37" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="650" y="450" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-38" value="TF in&lt;div&gt;svc&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="661" y="460" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-39" value="TF monolith" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="721" y="460" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-40" value="Jenkinsfile" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="781" y="460" width="69" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-41" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="650" y="520" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-42" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="650" y="590" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-43" value="GCP" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="660" y="600" width="39" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-44" value="Jenkins" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="711" y="600" width="49" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-45" value="W" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="703.5" y="670" width="123" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-46" value="TFE" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="661" y="530" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-47" value="Vault" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="770" y="600" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cYr1B52apxmAPbhfWzlL-48" value="K8S" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="826.5" y="600" width="50" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
