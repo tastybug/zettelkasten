@@ -52,7 +52,7 @@ Ready to use pieces:
 
 ## Anatomy
 
-![Anatomy](./platform anatomy.jpg)
+![Anatomy](./platform_anatomy.jpg)
 
 ## Past Org Setups
 
