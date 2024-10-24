@@ -40,7 +40,15 @@ This is how I understand it, using Amazon as an example:
 
 # Platform as a Product, Roadmapping
 
-You can visualize a platform using a 3d rube.
+You can think about product development of platforms in 3 dimensions:
+
+1. Reach: how many people do you want to reach?
+2. Breadth: how many platform services do you offer?
+3. Depth: per service that you offer, how deep does that go?
+
+Example scenarios:
+* High depth, low breadth, medium reach: the platform team offers only K8s, but in depth, supporting it with Helm and automation.
+* Low depth, high breadth, high reach: the platform team offers a bunch of services, but it's _plain_ hosting, no support. There is something for everyone, but its very basic.
 
 ![Roadmap-Rube](https://github.com/user-attachments/assets/db61017d-2e97-4c0f-ac74-30fafff4c4d1)
 
