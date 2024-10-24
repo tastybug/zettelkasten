@@ -38,11 +38,11 @@ This is how I understand it, using Amazon as an example:
 
 ![common-blueprint](https://github.com/user-attachments/assets/b71e6c92-ee09-4c2c-82e5-7c8bf48d2fb8)
 
-## Setting Expectations
+# Platform as a Product, Roadmapping
 
-> Embarking on a digital platform initiative must be guided by a clear roadmap with intermediate deliverables and the values achieved.
+You can visualize a platform using a 3d rube.
 
-Can we plot a value delivery chart?
+![Roadmap-Rube](https://github.com/user-attachments/assets/db61017d-2e97-4c0f-ac74-30fafff4c4d1)
 
 # Implementations
 
