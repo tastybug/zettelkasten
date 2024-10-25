@@ -52,6 +52,10 @@ Example scenarios:
 
 ![Roadmap-Rube](https://github.com/user-attachments/assets/db61017d-2e97-4c0f-ac74-30fafff4c4d1)
 
+## Medidata
+
+* aim to support at least 2 adjacent services in the beginning; as a platform team the service is our product, which has its own lifecycle (release process, updating things, ..). Ideally treat this service lifecycle also as something that we want to automate. The automation should be generic enough that it works for at least the first 2 services. Otherwise we run the risk of having a too tailored approach.
+
 # Implementations
 
 Ready to use pieces:
