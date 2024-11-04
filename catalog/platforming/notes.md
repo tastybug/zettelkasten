@@ -1,6 +1,6 @@
 # Platforming
 
-## What Are We Aiming For?
+## Taxonomy
 
 ### McKinsey's Platform Classification 
 
@@ -25,7 +25,7 @@ This is how I understand it, using Amazon as an example:
 
 ![thoughtworks-model](https://github.com/user-attachments/assets/37966fb1-586e-499f-a817-9a1132ba0c01)
 
-### Possible Goals 
+## Possible Goals of an IT Platform
 
 * Reduce cost: allow orgs to reuse IT assets across a wide range of use cases, reducing cost of new development
 * Increase velocity: reuse also accelerates new development and experimentation - you stand on top of a platform. Automated processes and delivery pieplines reduce friction.
