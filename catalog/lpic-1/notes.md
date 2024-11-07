@@ -4,7 +4,7 @@
 
 There are 3 kinds of hostnames: transient and static and pretty hostname. While static hostnames are used for non-temporary systems, the transient hostname is for short-lived systems (e.g. cloud environments) or a name coming from DHCP. The pretty name is for display purposes only, can contain special characters and has no functional impact.
 
-> A host can have all hostname types at the same time!
+> A host can have all hostname types at the same time. A static hostname functionally has higher precendence than a transient one.
 
 ```shell
 [root@rocky ~]# hostnamectl
