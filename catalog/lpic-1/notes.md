@@ -56,3 +56,12 @@ aliases:    files
 ethers:     files
 // snip
 ```
+
+## Local Resolution with LLMNR - Link Local Multicast Name Resolution
+
+LLMNR is a protocol for name resolution on local networks. It allows devices on the same local network or link to resolve each other's hostnames to IP addresses without the help of a DNS server.
+
+> LLMNR works by sending multicast queries to all devices on the local network, asking for IP addresses associated with particular hostnames.
+
+LLMNR is usually switched __off__ by default.
+
