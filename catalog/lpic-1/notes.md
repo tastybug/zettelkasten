@@ -28,3 +28,31 @@ There are different tools and locations (the list is incomplete) to influence th
   * `hostnamectl set-hostname --static foo`
   * `hostnamectl set-hostname --transient bar`
   * `hostnamectl set-hostname --pretty baz`
+
+## Changing the Order of DNS Resolution and the `dig`, `getent` and `nslookup` Commands
+
+There are different commands to query DNS data:
+
+* `dig` and `nslookup` query DNS servers for records.
+* `gentent` does system level name resultion using the system database (passwd, hosts, DNS), using Name Service Switch (NSS).
+
+> `nslookup` and `dig` do not look at `/etc/hosts` when resolving a query. `entent` however does so.
+
+### Changing the Order of Resolution
+
+`sudo vi /etc/nsswitch.conf`: here you can change the sources and orders of resolution of different types like hosts, users, groups and more:
+
+```
+# In order of likelihood of use to accelerate lookup.
+passwd:     sss files systemd
+shadow:     files
+group:      sss files systemd
+hosts:      files dns myhostname
+services:   files sss
+netgroup:   sss
+automount:  files sss
+
+aliases:    files
+ethers:     files
+// snip
+```
