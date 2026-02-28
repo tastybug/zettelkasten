@@ -335,14 +335,24 @@ This is the process later on when accessing the engine:
 6. Once the TLL expires, Vault revokes the temporary credentials.
 
 
-## Backends
+## Storage Backends
 
-There are many backend implementations, some community owned. They either support HA or not (see next section).
+Storage Backends are used to store secrets and certain configuration like policies and auth configuration. 
 
-Popular backends are cloud based like S3, Consul and the internal backend, called `raft`, where each node has it's own FS based persistency, which is synced automatically.
+### Types
+There are many storage backend implementations, some community owned. They either support HA or not (see next section). Popular backends are cloud based like S3, Consul and the internal backend, called `raft`, where each node has it's own FS based persistency, which is synced automatically.
 
 * Consul: can be scaled independently, increasing throughput
 * Raft: is a file on the FS of each Vault node (the node is stateful!), no extra network hop necessary; sync is done transparently between the nodes
+
+### Encryption at Rest and a thousand keys
+
+All data that goes into the storage is encrypted. The key for writing and reading from storage is the `encryption key`. It's interesting how that process works:
+
+1. the storage starts sealed
+2. the quorum of Shamir's unseal keys allows the computation of a static `root key`
+3. the root key, in memory only, descrypts the keyring containing the `encryption key`; the keyring is stored in the storage backend as well
+4. the `encryption key` allows access to the rest of the storage backend: configuration and data
 
 ### How Backends Influence Scaling
 
