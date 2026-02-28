@@ -345,14 +345,32 @@ There are many storage backend implementations, some community owned. They eithe
 * Consul: can be scaled independently, increasing throughput
 * Raft: is a file on the FS of each Vault node (the node is stateful!), no extra network hop necessary; sync is done transparently between the nodes
 
-### Encryption at Rest and a thousand keys
+### Encryption at Rest, Sealing and Unsealing
 
-All data that goes into the storage is encrypted. The key for writing and reading from storage is the `encryption key`. It's interesting how that process works:
+All data that goes into the storage is encrypted. The key for writing and reading from storage is the `encryption key`, which lives in a keyring. It's interesting how that process works:
 
-1. the storage starts sealed
-2. the quorum of Shamir's unseal keys allows the computation of a static `root key`
-3. the root key, in memory only, descrypts the keyring containing the `encryption key`; the keyring is stored in the storage backend as well
+1. the storage on a node starts sealed
+2. the quorum of Shamir's unseal key shards allows the computation of a static `root key`
+3. the root key, in memory only, descrypts the keyring containing the `encryption key`; the keyring is stored in the storage backend as well. At this point, the node is considered "unsealed".
 4. the `encryption key` allows access to the rest of the storage backend: configuration and data
+5. The node becomes unsealed simply by purging the `encryption key` from memory, thus making the storage non-accessible again.
+
+The encryption key can be rotated (e.g. required by a company policy), hence the use of a keyring.
+
+#### Auto-Unseal
+
+With an on-premise HSM or by having access to a cloud secret manager, one is able to store the Shamir shards externally and have Vault auto-unseal with those means. This is possible with the Community and the Enterprise editions.
+In a place that runs multiple clusters, it is also possible to delegate auto-unsealing to another cluster using "Transit Auto Unseal".
+
+In case of auto-unseal, there will be no key shards to write down, but `recovery keys`.
+
+### Initialization
+
+Init happens once on a single node and achieves the following things:
+
+1. creates the `root key` and key shards
+2. creates the `root token`
+
 
 ### How Backends Influence Scaling
 
