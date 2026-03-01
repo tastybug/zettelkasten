@@ -48,17 +48,27 @@ Some available auth methods:
 
 #### Entities and Aliases
 
-An entity is something that authenticats with Vault, could be a system or a person. Each entity has 0+ aliases. An alias links an entity to an auth method (e.g. entity "Jane" has alias `jsmith` with auth method `userpass` and `funky22` with auth method `github`). 
+An entity is something that authenticats with Vault, could be a system or a person. An entity automatically comes into being by logging in. It is stored in an internal Identity secrets engine, which cannot be disabled.
+An entity can have aliases, which links the entity to an auth method, like the username "jsmith" can be a `userpass` alias for the entity `jane`. If jane can also log in via `github`, there would be an additional alias `jsmith22`.
 
-Entities and Aliases come with a bunch of metadata and 1+ policies. The policies of each can differ - the token generated when logging in will contain the policies from the entity plus the one from the alias.
-
-It's a bit counterintuitive that the method of authentication brings different permissions, but this is how it works according to [this](https://www.udemy.com/course/hashicorp-vault/learn/lecture/27039872#overview). Example:
+An alias has policies attached to it. In theory, the same entity could then have different policies depending on how she chooses to authenticate. An entity _also_ can have policies attached to it. Both kinds of policies then form the superset of active policies. Example:
 
 1. Entity `jane` has policy `management`.
 2. Alias for `github` has policy `HR`.
 3. Alias for `userpass` has policy `finance`.
 
 When logging in via github, Jane will receive a token with policies `management` and `HR`. When logging in via `userpass`, it's `management` plus `finance`.
+
+As written above, entities are automatically created upon first login per auth method used. This of course would create separate entities in the background, there is no magic deduplication of entities. 
+If you want `jane` to exist as a shared entity behind multiple aliases, you need to create `jane` intentionally.
+
+```
+vault auth list
+# write down the userpass accessor string
+vault write identity/entity name="Jane Doe" policies=manager
+# entity id is shown
+vault write identity/entity-alias name="jsmith" canonical_id="ENTITY_ID_AS_SHOWN_ABOVE" mount_accessor="THE_ACCESSOR_STRING"
+```
 
 #### Vault Groups
 
