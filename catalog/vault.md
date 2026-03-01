@@ -1,4 +1,4 @@
-# Vault
+# Hashicorp Vault
 
 Is a Hashicorp tool that offers management of certificates and secrets. The main selling point is the creation of dynamic secrets. Depending on how far you want to take this, dynamic secrets _can_ be:
 
@@ -34,7 +34,7 @@ To make it easy to try things out, you can run Vault in dev mode (__see Run Mode
 
 ### Auth Methods: Different Ways of Authenticating to Get a Token
 
-Vault supports different means of authentication to then allow access to the secrets, engines and so on. Auth methods are optimized for different human or system to system use cases. The purpose of each auth method is to ultimately give you a token. With the token you perform your actions using any of the interfaces, be it CLI, Web or API.
+Vault supports different means of authentication to then allow access to the secrets and configuration. Auth methods are optimized for different human or system to system use cases. The purpose of each auth method is to ultimately give you a token. With the token you perform your actions using any of the interfaces, be it CLI, Web or API.
 
 Initially, the only method is the "token method", which simply expects a token being given (e.g. the `root token` that will be pre-generated for you when starting the server in dev mode).
 
@@ -334,23 +334,39 @@ This is the process later on when accessing the engine:
 5. Client then accesses AWS target account, having the target role and the associated policy. 
 6. Once the TLL expires, Vault revokes the temporary credentials.
 
+## Audit Device
+
+Keep a log of authenticated requests and responses. The log is formatted in JSON, with sensitive data masked.
+There are different sinks:
+
+* _File_. Enable it as such: `vault audit enable file file_path=/var/log/vault_audit.log`.
+* _syslog_. Requires a local syslog agent running.
+* _socket_. Writes to a TCP, UDP or UNIX socket.
+
+> Important: if at least 1 audit device is enabled, Vault must be able to write to that sink before completing a request. Auditability over Availability!
 
 ## Storage Backends
 
 Storage Backends are used to store secrets and certain configuration like policies and auth configuration. 
 
 ### Types
-There are many storage backend implementations, some community owned. They either support HA or not (see next section). Popular backends are cloud based like S3, Consul and the internal backend, called `raft`, where each node has it's own FS based persistency, which is synced automatically.
+There are many storage backend implementations, some community owned. They either support HA or not (see next section). Popular backends are cloud based like S3, Consul and the Integrated Storage.
 
+Some examples:
 * Consul: can be scaled independently, increasing throughput
-* Raft: is a file on the FS of each Vault node (the node is stateful!), no extra network hop necessary; sync is done transparently between the nodes
+* Integrated Storage (raft): allows for clustering. It's a file on the FS of each Vault node; sync between nodes is done transparently
+* MSSQL
+* MySQL
+* Zookeeper
+* In-Mem
+* ...
 
 ### Encryption at Rest, Sealing and Unsealing
 
 All data that goes into the storage is encrypted. The key for writing and reading from storage is the `encryption key`, which lives in a keyring. It's interesting how that process works:
 
 1. the storage on a node starts sealed
-2. the quorum of Shamir's unseal key shards allows the computation of a static `root key`
+2. unsealing: the quorum of Shamir's unseal key shards allows the computation of a static `root key`
 3. the root key, in memory only, descrypts the keyring containing the `encryption key`; the keyring is stored in the storage backend as well. At this point, the node is considered "unsealed".
 4. the `encryption key` allows access to the rest of the storage backend: configuration and data
 5. The node becomes unsealed simply by purging the `encryption key` from memory, thus making the storage non-accessible again.
@@ -371,6 +387,7 @@ Init happens once on a single node and achieves the following things:
 1. creates the `root key` and key shards
 2. creates the `root token`
 
+Initialization can happen via UI, API and CLI (`vault operator init <options>`).
 
 ### How Backends Influence Scaling
 
