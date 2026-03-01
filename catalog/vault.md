@@ -68,6 +68,7 @@ vault auth list
 vault write identity/entity name="Jane Doe" policies=manager
 # entity id is shown
 vault write identity/entity-alias name="jsmith" canonical_id="ENTITY_ID_AS_SHOWN_ABOVE" mount_accessor="THE_ACCESSOR_STRING"
+# when logging in now, the token will contain policy "manager" and whatever the userpass itself grants
 ```
 
 #### Vault Groups
